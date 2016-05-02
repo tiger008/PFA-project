@@ -2,8 +2,10 @@ type t = {
   id : string;
   porig : Point.t; 
   pdest : Point.t;
+  ci : float;
+  ce : float;
 }
-
+           
 type tpos = L | R | C
 
 val new_segment : int -> int -> int -> int -> t

@@ -14,6 +14,6 @@ let tr s p =
     }
 
 let angle s =
-    atan (foi (s.pdest.y - s.porig.y))/.(foi (s.pdest.x - s.porig.x))
+    atan (foi (s.pdest.y - s.porig.y)) /. (foi (s.pdest.x - s.porig.x))
 
 let display bsp p = 

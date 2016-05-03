@@ -52,8 +52,6 @@ let split_segment s1 s2 =
          | 0., _ -> posof posd s2
          | _, _ when c < 0. && c >= 1. -> posof poso s2
          | _ -> Some { s2 with ce = c }, Some { s2 with ci = c } 
-    
-
 
 let split s sl =
   let rec srec (sll, slr) sl =
@@ -62,7 +60,7 @@ let split s sl =
     | x::f -> let l, r = split_segment s x in
               match l, r with
               | None, None -> srec (sll, slr) f
-              | None, _ -> srec (sll, r::slr) f
-              | _, None -> srec (l::sll, slr) f
-              | _ -> srec (l::sll, r::slr) f
+              | None, Some d -> srec (sll, d::slr) f
+              | Some g, None -> srec (g::sll, slr) f
+              | Some g, Some d -> srec (g::sll, d::slr) f
   in srec ([], []) sl

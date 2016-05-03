@@ -16,4 +16,24 @@ let tr s p =
 let angle s =
     atan (foi (s.pdest.y - s.porig.y)) /. (foi (s.pdest.x - s.porig.x))
 
-let display bsp p = 
+let rec clip ls acc =
+  match ls with
+  | [] -> acc
+  | p::s ->
+     if p.porig.x < 1 && p.pdest.x < 1 then
+       clip s acc
+     else if p.porig.x < 1 then
+       let seg = {p with porig = new_point 1 (iof (foi (p.porig.y + (1 - p.porig.x)) *. dtan (iof (angle p)))); pdest = new_point p.pdest.x p.pdest.y} in
+       clip s (seg::acc)
+     else if p.porig.y < 1 then
+       let seg = {p with porig = new_point p.porig.x p.porig.y; pdest = new_point 1 (iof (foi (p.pdest.y + (1 - p.pdest.x)) *. dtan (iof (angle p))))} in
+       clip s (seg::acc)
+     else clip s (p::acc)
+
+(*let rec array_segments bsp acc =
+  match bsp with
+  | E -> acc
+  | N(s,sl,sr) -> 
+      let draw_player*)
+                                            
+let display bsp p = failwith "TODO"

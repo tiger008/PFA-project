@@ -26,12 +26,12 @@ let foi n = float_of_int n
 let move d p bsp =
     let dx, dy =
         match d with
-        | MFwd -> 0, 1
-        | MBwd -> 0, -1
-        | MLeft -> -1, 0
-        | MRight -> 1, 0 in
+        | MFwd -> 0, 2
+        | MBwd -> 0, -2
+        | MLeft -> -2, 0
+        | MRight -> 2, 0 in
     let np = new_point (p.pos.x + dx) (p.pos.y + dy) in
-        (*3D Point.new_point (iof ((foi (p.pos.x + dx) *. (dcos p.pa))) (iof ((foi (p.pos.y + dy)) *. (dsin p.pa))) in*)
+        (* 3D new_point (iof (foi (p.pos.x + dx) *. (dcos p.pa))) (iof ((foi (p.pos.y + dy)) *. (dsin p.pa))) in*)
     if not (detect_collision np bsp) then
         p.pos <- np
     else ()

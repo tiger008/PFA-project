@@ -6,9 +6,8 @@ type t = {id : string;
           ci : float;
           ce : float;
          }
-           
 type tpos = L | R | C
-                      
+
 let compteur i =
     let etat = ref i in
     fun () -> etat := !etat + 1; string_of_int !etat
@@ -36,8 +35,8 @@ let posof tp s =
   | L -> Some s, None
   | R -> None, Some s
   | _ -> None, None
-                 
-let split_segment s1 s2 = 
+
+let split_segment s1 s2 =
   let d = (s1.pdest.x - s1.porig.x) * (s2.pdest.y - s2.porig.y) - (s1.pdest.y - s1.porig.y) * (s2.pdest.x - s2.porig.x) in
   let (poso, z) = get_position2 s2.porig s1 in
   let (posd, _) = get_position2 s2.pdest s1 in
@@ -47,11 +46,11 @@ let split_segment s1 s2 =
   | _, C when posd = L -> Some s2, None
   | _, C when posd = R -> None, Some s2
   | _, C -> None, None
-  | _ -> let c = (float_of_int (-z))/.(float_of_int d) in
+  | _ -> let c = (float_of_int (-z)) /. (float_of_int d) in
          match c, poso with
          | 0., _ -> posof posd s2
-         | _, _ when c < 0. && c >= 1. -> posof poso s2
-         | _ -> Some { s2 with ce = c }, Some { s2 with ci = c } 
+         | _, _ when c < 0. || c >= 1. -> posof poso s2
+         | _ -> Some { s2 with ce = c }, Some { s2 with ci = c }
 
 let split s sl =
   let rec srec (sll, slr) sl =

@@ -32,6 +32,7 @@ let () =
           | _ -> ()
           in
           (*display map player;*)
+          clear_graph ();
           draw_segments (Array.of_list sl);
           draw_circle player.pos.x player.pos.y 5;
           synchronize ();

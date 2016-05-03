@@ -35,5 +35,5 @@ let rec clip ls acc =
   | E -> acc
   | N(s,sl,sr) -> 
       let draw_player*)
-                                            
+
 let display bsp p = failwith "TODO"

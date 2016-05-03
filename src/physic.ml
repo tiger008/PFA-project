@@ -1,3 +1,6 @@
+open Bsp
+open Segment
+
 let detect_collision p bsp =
   let rec rdc bsp =
     match bsp with

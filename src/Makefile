@@ -38,8 +38,12 @@ $(EXEC).opt: $(OPTOBJS)
 
 clean:
 	rm -f *.cm[iox] *~ .*~ *.o *.annot .depend
-	rm -f $(EXEC) 
+
+fclean: clean
+	rm -f $(EXEC)
 	rm -f $(EXEC).opt
+
+re: clean all
 
 .SUFFIXES: .ml .mli .cmo .cmi .mll
 

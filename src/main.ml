@@ -22,12 +22,12 @@ let () =
           let s = Graphics.wait_next_event [Graphics.Key_pressed] in
           let esc = char_of_int 27 in
           let _ = match s.key with
-          | w -> move MFwd player map
-          | s -> move MBwd player map
-          | a -> move MLeft player map
-          | d -> move MRight player map
-          | e -> rotate Left player
-          | r -> rotate Right player
+          | 'w' | 'z' -> move MFwd player map
+          | 's' -> move MBwd player map
+          | 'a' | 'q'-> move MLeft player map
+          | 'd' -> move MRight player map
+          | 'e' -> rotate Left player
+          | 'r' -> rotate Right player
           | esc -> raise Exit
           | _ -> ()
           in

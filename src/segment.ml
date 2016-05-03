@@ -46,7 +46,7 @@ let split_segment s1 s2 =
   | 0, R -> None, Some s2
   | _, C when posd = L -> Some s2, None
   | _, C when posd = R -> None, Some s2
-  | _, C -> failwith "meme segment"
+  | _, C -> None, None
   | _ -> let c = (float_of_int (-z))/.(float_of_int d) in
          match c, poso with
          | 0., _ -> posof posd s2

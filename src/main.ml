@@ -5,6 +5,7 @@ open Parse_lab
 open Segment
 open Point
 open Bsp
+open Trigo
 
 let rec seglist il acc =
     match il with
@@ -22,18 +23,19 @@ let () =
           let s = Graphics.wait_next_event [Graphics.Key_pressed] in
           let _ = match s.key with
           | 'w' | 'z' -> move MFwd player map
-          | 's' -> move MBwd player map
-          | 'a' | 'q'-> move MLeft player map
-          | 'd' -> move MRight player map
-          | 'e' -> rotate Left player
-          | 'r' -> rotate Right player
+          (*| 's' -> move MBwd player map*)
+          (*| 'a' | 'q'-> move MLeft player map*)
+          (*'d' -> move MRight player map*)
+          | 'a' | 'q' -> rotate Left player
+          | 'd' -> rotate Right player
           | '\027' -> raise Exit
           | _ -> ()
           in
           (*display map player;*)
           clear_graph ();
-          let anglebob = [(player.pos.x, player.pos.y, )] in
+          let anglebob = let a = (player.pos.x, player.pos.y, player.pos.x + (int_of_float (10. *. (dcos (player.pa)))), player.pos.y + (int_of_float (10. *. (dsin (player.pa))))) in a::[] in
           draw_segments (Array.of_list sl);
+          draw_segments (Array.of_list anglebob);
           draw_circle player.pos.x player.pos.y 5;
           synchronize ();
       done;

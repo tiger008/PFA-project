@@ -20,7 +20,6 @@ let () =
   try
       while true do
           let s = Graphics.wait_next_event [Graphics.Key_pressed] in
-          let esc = char_of_int 27 in
           let _ = match s.key with
           | 'w' | 'z' -> move MFwd player map
           | 's' -> move MBwd player map
@@ -28,11 +27,12 @@ let () =
           | 'd' -> move MRight player map
           | 'e' -> rotate Left player
           | 'r' -> rotate Right player
-          | esc -> raise Exit
+          | '\027' -> raise Exit
           | _ -> ()
           in
           (*display map player;*)
           clear_graph ();
+          let anglebob = [(player.pos.x, player.pos.y, )] in
           draw_segments (Array.of_list sl);
           draw_circle player.pos.x player.pos.y 5;
           synchronize ();

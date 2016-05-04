@@ -43,7 +43,7 @@ fclean: clean
 	rm -f $(EXEC)
 	rm -f $(EXEC).opt
 
-re: clean all
+re: fclean all
 
 .SUFFIXES: .ml .mli .cmo .cmi .mll
 

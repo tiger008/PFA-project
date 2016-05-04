@@ -16,8 +16,8 @@ type dir = Left | Right
 let rotate d p =
   let a = Printf.printf "%d\n" p.pa in
   match d with
-  | Left -> p.pa <- (p.pa + 5) mod 360
-  | Right -> p.pa <- (p.pa - 5) mod 360
+  | Left -> p.pa <- (p.pa + 15) mod 360
+  | Right -> p.pa <- (p.pa - 15) mod 360
 
 type mv = MFwd | MBwd | MLeft | MRight
 
@@ -26,13 +26,23 @@ let iof n = int_of_float n
 let foi n = float_of_int n
 
 let move d p bsp =
-    let dx, dy =
-        match d with
-        | MFwd -> 0., 2.
-        | MBwd -> 0., -2.
-        | MLeft -> -2., 0.
-        | MRight -> 2., 0. in
-    let np = new_point (iof (foi (p.pos.x) +. 2. *. (dcos p.pa))) (iof (foi (p.pos.y) +. 2. *. (dsin p.pa))) in
-    if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
-        p.pos <- np
-    else ()
+  Printf.printf "position x : %d\n" p.pos.x;
+  Printf.printf "position y : %d\n" p.pos.y;
+  let npa = p.pa-90 in
+  match d with
+  | MFwd -> let np = new_point (iof ((foi (p.pos.x)) -. 5. *. (dsin (npa)))) (iof ((foi (p.pos.y)) +. 5. *. (dcos (npa)))) in
+            if not (detect_collision np bsp) then
+              p.pos <- np
+            else ()
+  | MBwd -> let np = new_point (iof ((foi (p.pos.x)) +. 5. *. (dsin (npa)))) (iof ((foi (p.pos.y)) -. 5. *. (dcos (npa)))) in
+            if not (detect_collision np bsp) then
+              p.pos <- np
+            else ()
+  | MLeft -> let np = new_point (iof ((foi (p.pos.x)) -. 5. *. (dcos (npa)))) (iof ((foi (p.pos.y)) -. 5. *. (dsin (npa)))) in
+             if not (detect_collision np bsp) then
+               p.pos <- np
+             else ()
+  | MRight -> let np = new_point (iof ((foi (p.pos.x)) +. 5. *. (dcos (npa)))) (iof ((foi (p.pos.y)) +. 5. *. (dsin (npa)))) in
+              if not (detect_collision np bsp) then
+                p.pos <- np
+              else ()

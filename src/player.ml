@@ -30,19 +30,19 @@ let move d p bsp =
   Printf.printf "position y : %d\n" p.pos.y;
   let npa = p.pa-90 in
   match d with
-  | MFwd -> let np = new_point (iof ((foi (p.pos.x)) -. 5. *. (dsin (npa)))) (iof ((foi (p.pos.y)) +. 5. *. (dcos (npa)))) in
+  | MFwd -> let np = new_point (iof (ceil ((foi (p.pos.x)) -. 5. *. (dsin (npa))))) (iof (ceil ((foi (p.pos.y)) +. 5. *. (dcos (npa))))) in
             if not (detect_collision np bsp) then
               p.pos <- np
             else ()
-  | MBwd -> let np = new_point (iof ((foi (p.pos.x)) +. 5. *. (dsin (npa)))) (iof ((foi (p.pos.y)) -. 5. *. (dcos (npa)))) in
+  | MBwd -> let np = new_point (iof (floor ((foi (p.pos.x)) +. 5. *. (dsin (npa))))) (iof (floor ((foi (p.pos.y)) -. 5. *. (dcos (npa))))) in
             if not (detect_collision np bsp) then
               p.pos <- np
             else ()
-  | MLeft -> let np = new_point (iof ((foi (p.pos.x)) -. 5. *. (dcos (npa)))) (iof ((foi (p.pos.y)) -. 5. *. (dsin (npa)))) in
+  | MLeft -> let np = new_point (iof (ceil ((foi (p.pos.x)) -. 5. *. (dcos (npa))))) (iof (ceil ((foi (p.pos.y)) -. 5. *. (dsin (npa))))) in
              if not (detect_collision np bsp) then
                p.pos <- np
              else ()
-  | MRight -> let np = new_point (iof ((foi (p.pos.x)) +. 5. *. (dcos (npa)))) (iof ((foi (p.pos.y)) +. 5. *. (dsin (npa)))) in
+  | MRight -> let np = new_point (iof (floor ((foi (p.pos.x)) +. 5. *. (dcos (npa))))) (iof (floor ((foi (p.pos.y)) +. 5. *. (dsin (npa))))) in
               if not (detect_collision np bsp) then
                 p.pos <- np
               else ()

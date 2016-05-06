@@ -2,7 +2,9 @@ open Segment
 open Point
 open Player
 open Trigo
-
+open Graphics
+open Bsp
+       
 let tr s p =
     {s with
     porig = new_point (iof ((foi (s.porig.x - p.pos.x)) *. (dcos (-p.pa)) -. (foi (s.porig.y - p.pos.y)) *. (dsin (-p.pa)))) (iof ((foi (s.porig.y - p.pos.y)) *. (dcos (-p.pa)) -. (foi (s.porig.x - p.pos.x)) *. (dsin (-p.pa))));
@@ -32,4 +34,16 @@ let rec clip ls acc =
   | N(s,sl,sr) -> 
       let draw_player*)
 
-let display bsp p = failwith "TODO"
+let segtoarray s =
+    Array.of_list [(s.porig.x + iof (s.ci *. (foi s.lx)), s.porig.y + iof (s.ci *. (foi s.ly)), s.pdest.x + iof (s.ce *. (foi s.lx)), s.pdest.y + iof (s.ce *. (foi s.ly)))]
+               
+let display bsp player =
+  let angle1 = [(player.pos.x, player.pos.y, player.pos.x + (int_of_float (10. *. (dcos (player.pa-30)))), player.pos.y + (int_of_float (20. *. (dsin (player.pa-30)))))] in
+  let angle2 = [(player.pos.x, player.pos.y, player.pos.x + (int_of_float (10. *. (dcos (player.pa+30)))), player.pos.y + (int_of_float (20. *. (dsin (player.pa+30)))))] in
+  draw_segments (Array.of_list angle1);
+  draw_segments (Array.of_list angle2);
+  let rec recd = function
+    | E -> ()
+    | N(r,ag,ad) -> draw_segments (segtoarray r); recd ag; recd ad
+  in recd bsp
+                                

@@ -14,7 +14,7 @@ let new_player pos pa = { pos; pa }
 type dir = Left | Right
 
 let rotate d p =
-  let a = Printf.printf "%d\n" p.pa in
+  let _ = Printf.printf "%d\n" p.pa in
   match d with
   | Left -> p.pa <- (p.pa + 15) mod 360
   | Right -> p.pa <- (p.pa - 15) mod 360

@@ -19,6 +19,8 @@ let () =
     open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try
+          let angle1 = [(player.pos.x, player.pos.y, player.pos.x + (int_of_float (10. *. (dcos (player.pa-30)))), player.pos.y + (int_of_float (20. *. (dsin (player.pa-30)))))] in
+          let angle2 = [(player.pos.x, player.pos.y, player.pos.x + (int_of_float (10. *. (dcos (player.pa+30)))), player.pos.y + (int_of_float (20. *. (dsin (player.pa+30)))))] in
       draw_segments (Array.of_list sl);
       draw_segments (Array.of_list angle1);
       draw_segments (Array.of_list angle2);

@@ -24,6 +24,7 @@ let () =
       draw_segments (Array.of_list sl);
       draw_segments (Array.of_list angle1);
       draw_segments (Array.of_list angle2);
+      synchronize ();
       while true do
           let s = Graphics.wait_next_event [Graphics.Key_pressed] in
           let _ = match s.key with

@@ -6,6 +6,7 @@ open Segment
 open Point
 open Bsp
 open Trigo
+open Sys
 
 let rec seglist il acc =
     match il with
@@ -13,7 +14,7 @@ let rec seglist il acc =
   | (xo, yo, xd, yd)::s -> seglist s ((new_segment xo yo xd yd)::acc)
 
 let () =
-    let ((x, y, a), sl) = read_lab stdin in
+    let ((x, y, a), sl) = read_lab (open_in argv.(1))  in
     let player = new_player (new_point x y) a in
     let map = build_bsp (seglist sl []) in
     open_graph (Printf.sprintf " %dx%d" win_w win_h);

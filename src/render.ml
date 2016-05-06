@@ -3,10 +3,6 @@ open Point
 open Player
 open Trigo
 
-let iof n = int_of_float n
-
-let foi n = float_of_int n
-
 let tr s p =
     {s with
     porig = new_point (iof ((foi (s.porig.x - p.pos.x)) *. (dcos (-p.pa)) -. (foi (s.porig.y - p.pos.y)) *. (dsin (-p.pa)))) (iof ((foi (s.porig.y - p.pos.y)) *. (dcos (-p.pa)) -. (foi (s.porig.x - p.pos.x)) *. (dsin (-p.pa))));

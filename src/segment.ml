@@ -3,6 +3,8 @@ open Point
 type t = {id : string; 
           porig : Point.t;
           pdest : Point.t;
+          lx : int;
+          ly : int;
           ci : float;
           ce : float;
          }
@@ -14,7 +16,7 @@ let compteur i =
 
 let get_id = compteur 0
 
-let new_segment xo yo xd yd = { id = get_id (); porig = Point.new_point xo yo; pdest = Point.new_point xd yd; ci = 0.; ce = 1. }
+let new_segment xo yo xd yd = { id = get_id (); porig = Point.new_point xo yo; pdest = Point.new_point xd yd; lx = xd - xo; ly = yd - yo; ci = 0.; ce = 1. }
 
 let get_position p s =
     let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
@@ -24,7 +26,7 @@ let get_position p s =
      | _ -> L
 
 let get_position2 p s =
-    let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
+    let z = (s.pdest.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.pdest.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
     match z with
      | 0 -> C, z
      | _ when z < 0 -> R, z

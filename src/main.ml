@@ -19,6 +19,9 @@ let () =
     open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try
+      draw_segments (Array.of_list sl);
+      draw_segments (Array.of_list angle1);
+      draw_segments (Array.of_list angle2);
       while true do
           let s = Graphics.wait_next_event [Graphics.Key_pressed] in
           let _ = match s.key with

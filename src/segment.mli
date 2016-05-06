@@ -2,6 +2,8 @@ type t = {
   id : string;
   porig : Point.t; 
   pdest : Point.t;
+  lx : int;
+  ly : int;
   ci : float;
   ce : float;
 }

@@ -19,14 +19,14 @@ let get_id = compteur 0
 let new_segment xo yo xd yd = { id = get_id (); porig = Point.new_point xo yo; pdest = Point.new_point xd yd; lx = xd - xo; ly = yd - yo; ci = 0.; ce = 1. }
 
 let get_position p s =
-    let z = (s.pdest.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.pdest.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
+    let z = (s.porig.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.porig.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
     match z with
      | 0 -> C
      | _ when z < 0 -> R
      | _ -> L
 
 let get_position2 p s =
-    let z = (s.pdest.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.pdest.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
+    let z = (s.porig.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.porig.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
     match z with
      | 0 -> C, z
      | _ when z < 0 -> R, z
@@ -39,7 +39,7 @@ let posof tp s =
   | _ -> None, None
 
 let split_segment s1 s2 =
-  let d = (s1.pdest.x - s1.porig.x) * (s2.pdest.y - s2.porig.y) - (s1.pdest.y - s1.porig.y) * (s2.pdest.x - s2.porig.x) in
+  let d = (s1.porig.x + iof ((foi s1.lx) *. s1.ce) - s1.porig.x + iof((foi s1.lx) *. s1.ci)) * (s2.porig.y + iof((foi s2.ly) *. s2.ce) - s2.porig.y + iof((foi s2.ly) *. s2.ci)) - (s1.porig.y + iof((foi s1.ly) *. s1.ce) - s1.porig.y + iof((foi s1.ly) *. s1.ci)) * (s2.porig.x + iof ((foi s2.lx) *. s2.ce) - s2.porig.x + iof((foi s2.lx) *. s2.ci)) in
   let (poso, z) = get_position2 s2.porig s1 in
   let (posd, _) = get_position2 s2.pdest s1 in
   match d, poso with

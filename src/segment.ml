@@ -41,14 +41,14 @@ let posof tp s =
 let split_segment s1 s2 =
   let d = (s1.porig.x + iof ((foi s1.lx) *. s1.ce) - s1.porig.x + iof((foi s1.lx) *. s1.ci)) * (s2.porig.y + iof((foi s2.ly) *. s2.ce) - s2.porig.y + iof((foi s2.ly) *. s2.ci)) - (s1.porig.y + iof((foi s1.ly) *. s1.ce) - s1.porig.y + iof((foi s1.ly) *. s1.ci)) * (s2.porig.x + iof ((foi s2.lx) *. s2.ce) - s2.porig.x + iof((foi s2.lx) *. s2.ci)) in
   let (poso, z) = get_position2 s2.porig s1 in
-  let (posd, _) = get_position2 s2.pdest s1 in
+  let posd = get_position s2.pdest s1 in
   match d, poso with
   | 0, L -> Some s2, None
   | 0, R -> None, Some s2
   | _, C when posd = L -> Some s2, None
   | _, C when posd = R -> None, Some s2
   | _, C -> None, None
-  | _ -> let c = (float_of_int (-z)) /. (float_of_int d) in
+  | _ -> let c = (foi (-z)) /. (foi d) in
          match c, poso with
          | 0., _ -> posof posd s2
          | _, _ when c < 0. || c >= 1. -> posof poso s2

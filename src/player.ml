@@ -27,7 +27,6 @@ let move d p bsp =
   let npa = p.pa-90 in
   match d with
   | MFwd -> let np = new_point (iof (ceil ((foi (p.pos.x)) -. 5. *. (dsin (npa))))) (iof (ceil ((foi (p.pos.y)) +. 5. *. (dcos (npa))))) in
-            let s = new_segment p.pos.x p.pos.y np.x np.y in
             if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
               p.pos <- np
             else ()

@@ -20,17 +20,17 @@ let dacos c = r_to_deg (acos c)
 let dsin a = sin (d_to_rad a)
 
 let rotation s a =
-    {s with
+  {s with
     xo = (s.xo *. (dcos a) -. s.yo *. (dsin a));
-  yo = (s.xo *. (dsin a) +. s.yo *. (dcos a));
-  xd = (s.xd *. (dcos a) -. s.yd *. (dsin a));
-  yd = (s.xd *. (dsin a) +. s.yd *. (dcos a))
-    }
-
+    yo = (s.xo *. (dsin a) +. s.yo *. (dcos a));
+    xd = (s.xd *. (dcos a) -. s.yd *. (dsin a));
+    yd = (s.xd *. (dsin a) +. s.yd *. (dcos a))
+  }
+    
 let translation s t =
-    {s with
+  {s with
     xo = (s.xo +. (foi t.x));
     yo = (s.yo +. (foi t.y));
     xd = (s.xd +. (foi t.x));
     yd = (s.yd +. (foi t.y))
-    }
+  }

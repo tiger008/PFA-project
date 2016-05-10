@@ -12,10 +12,10 @@ type t = {
 
 let new_fsegment xo yo xd yd = {
    id = get_id ();
-   xo;
-   yo;
-   xd;
-   yd;
+   xo = xo;
+   yo = yo;
+   xd = xd;
+   yd = yd;
    angle = atan2 (yd -. yo) (xd -. xo)
 }
 

@@ -11,47 +11,43 @@ open Bsp
     pdest = new_point (iof ((foi (s.pdest.x - p.pos.x)) *. (dcos (-p.pa)) -. (foi (s.pdest.y - p.pos.y)) *. (dsin (-p.pa)))) (iof ((foi (s.pdest.y - p.pos.y)) *. (dcos (-p.pa)) +. (foi (s.pdest.x - p.pos.x)) *. (dsin (-p.pa))))
   }*)
 
-let vrai_point1 s =
-  new_point (iof ((foi s.porig.x) +. s.ci *. (foi s.lx))) (iof ((foi s.porig.y) +. s.ci *. (foi s.ly)))
-
-let vrai_point2 s =
-  new_point (iof ((foi s.pdest.x) +. s.ce *. (foi s.lx))) (iof ((foi s.pdest.y) +. s.ce *. (foi s.ly)))
-       
 let translation_rotation s p =
   {s with
-    porig = rotation (translation (vrai_point1 s) (new_point (-p.pos.x) (-p.pos.y))) (-p.pa);
-    pdest = rotation (translation (vrai_point2 s) (new_point (-p.pos.x) (-p.pos.y))) (-p.pa);
+    porig = rotation (translation s.porig (new_point (-p.pos.x) (-p.pos.y))) (-p.pa);
+    pdest = rotation (translation s.pdest (new_point (-p.pos.x) (-p.pos.y))) (-p.pa);
   }
-            
+
 let translation_rotation_inverse s p =
   {s with
-    porig = translation (rotation (vrai_point1 s) p.pa) (new_point (-p.pos.x) (-p.pos.y));
-    pdest = translation (rotation (vrai_point2 s) p.pa) (new_point (-p.pos.x) (-p.pos.y))
+    porig = translation (rotation s.porig p.pa) p.pos;
+    pdest = translation (rotation s.pdest p.pa) p.pos
   }
 
 let angle s =
-    atan2 (((foi s.pdest.y) +. s.ce *. (foi s.ly)) -. ((foi s.porig.y) +. s.ci *. (foi s.ly))) (((foi s.pdest.x) +. s.ce *. (foi s.lx)) -. ((foi s.porig.x) +. s.ci *. (foi s.lx)))
+    atan2 (foi (s.pdest.y - s.porig.y)) (foi (s.pdest.x - s.porig.x))
 
 let clip l p =
   let rec rclip acc = function
     | [] -> acc
-    | r::s -> let a = translation_rotation r p in
+    | r::s ->
+        let r = get_segment r in
+        let a = translation_rotation r p in
               if a.porig.x < 1 && a.pdest.x < 1 then
                 rclip acc s
               else if a.porig.x < 1 then
                 let seg = {a with porig = new_point 1 (iof (foi (a.porig.y + (1 - a.porig.x)) *. tan ((angle a)))); pdest = new_point a.pdest.x a.pdest.y} in
                 rclip ((translation_rotation_inverse seg p)::acc) s
-              else if a.porig.y < 1 then
+              else if a.pdest.x < 1 then
                 let seg = {a with porig = new_point a.porig.x a.porig.y; pdest = new_point 1 (iof (foi (a.pdest.y + (1 - a.pdest.x)) *. tan ((angle a))))} in
                 rclip ((translation_rotation_inverse seg p)::acc) s
               else rclip (r::acc) s
   in rclip [] l
-           
+
 let rec bsp_to_list = function
   | E -> []
   | N(r,ag,ad) ->
      List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
-         
+
 (*let rec array_segments bsp acc =
   match bsp with
   | E -> acc
@@ -59,7 +55,7 @@ let rec bsp_to_list = function
       let draw_player*)
 
 let segtoarray s =
-    Array.of_list [(s.porig.x + iof (s.ci *. (foi s.lx)), s.porig.y + iof (s.ci *. (foi s.ly)), s.porig.x + iof (s.ce *. (foi s.lx)), s.porig.y + iof (s.ce *. (foi s.ly)))]
+    Array.of_list [(s.porig.x, s.porig.y, s.pdest.x, s.pdest.y)]
 
 let rec draw sl =
   match sl with

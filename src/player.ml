@@ -20,9 +20,6 @@ let rotate d p =
 
 type mv = MFwd | MBwd | MLeft | MRight
 
-let segtoarray s =
-  Array.of_list [(s.porig.x + iof (s.ci *. (foi s.lx)), s.porig.y + iof (s.ci *. (foi s.ly)), s.pdest.x + iof (s.ce *. (foi s.lx)), s.pdest.y + iof (s.ce *. (foi s.ly)))]
-
 let move d p bsp =
   let npa = p.pa-90 in
   match d with

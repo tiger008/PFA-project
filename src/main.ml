@@ -18,6 +18,7 @@ let () =
   let ((x, y, a), sl) = read_lab (open_in argv.(1))  in
   let player = new_player (new_point x y) a in
   let map = build_bsp (seglist sl []) in
+    Printf.printf "%s\n" (string_of_bsp map);
   open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try

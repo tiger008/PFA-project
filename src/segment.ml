@@ -1,6 +1,6 @@
 open Point
 
-type t = {id : string; 
+type t = {id : string;
           porig : Point.t;
           pdest : Point.t;
           lx : int;
@@ -22,14 +22,17 @@ let get_segment s =
   {s with porig = new_point (s.porig.x + iof ((foi s.lx) *. s.ci)) (s.porig.y + iof ((foi s.ly) *. s.ci)); pdest = new_point (s.porig.x + iof ((foi s.lx) *. s.ce)) (s.porig.y + iof ((foi s.ly) *. s.ce))}
 
 let get_position p s =
-    let z = (s.porig.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.porig.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
+  let s = get_segment s in
+    let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
     match z with
      | 0 -> C
      | _ when z < 0 -> R
      | _ -> L
 
 let get_position2 p s =
-    let z = (s.porig.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.porig.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in
+  let s = get_segment s in
+    let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
+  (*  let z = (s.porig.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.porig.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in *)
     match z with
      | 0 -> C, z
      | _ when z < 0 -> R, z
@@ -42,7 +45,10 @@ let posof tp s =
   | _ -> None, None
 
 let split_segment s1 s2 =
-  let d = (s1.porig.x + iof ((foi s1.lx) *. s1.ce) - s1.porig.x + iof((foi s1.lx) *. s1.ci)) * (s2.porig.y + iof((foi s2.ly) *. s2.ce) - s2.porig.y + iof((foi s2.ly) *. s2.ci)) - (s1.porig.y + iof((foi s1.ly) *. s1.ce) - s1.porig.y + iof((foi s1.ly) *. s1.ci)) * (s2.porig.x + iof ((foi s2.lx) *. s2.ce) - s2.porig.x + iof((foi s2.lx) *. s2.ci)) in
+  let ss1 = get_segment s1 in
+  let ss2 = get_segment s2 in
+  let d = (ss1.pdest.x - ss1.porig.x) * (ss2.pdest.y - ss2.porig.y) - (ss1.pdest.y - ss1.porig.y) * (ss2.pdest.x - ss2.porig.x) in
+  (* let d = (s1.porig.x + iof ((foi s1.lx) *. s1.ce) - s1.porig.x + iof((foi s1.lx) *. s1.ci)) * (s2.porig.y + iof((foi s2.ly) *. s2.ce) - s2.porig.y + iof((foi s2.ly) *. s2.ci)) - (s1.porig.y + iof((foi s1.ly) *. s1.ce) - s1.porig.y + iof((foi s1.ly) *. s1.ci)) * (s2.porig.x + iof ((foi s2.lx) *. s2.ce) - s2.porig.x + iof((foi s2.lx) *. s2.ci)) in *)
   let (poso, z) = get_position2 s2.porig s1 in
   let posd = get_position s2.pdest s1 in
   match d, poso with
@@ -68,3 +74,6 @@ let split s sl =
               | Some g, None -> srec (g::sll, slr) f
               | Some g, Some d -> srec (g::sll, d::slr) f
   in srec ([], []) sl
+
+let string_of_segment s =
+  "[id : "^s.id^", (xo : "^(string_of_int s.porig.x)^", yo : "^(string_of_int s.porig.y)^"), (xd : "^(string_of_int s.pdest.x)^", yd : "^(string_of_int s.pdest.y)^"), (lx : "^(string_of_int s.lx)^", ly : "^(string_of_int s.ly)^"), (ci : "^(string_of_float s.ci)^", ce : "^(string_of_float s.ce)^")]"

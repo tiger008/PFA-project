@@ -14,7 +14,7 @@ let parse f bsp p =
        | L -> rparse sl; f r; rparse sr
        | R -> rparse sr; f r; rparse sl
   in rparse bsp
-            
+
 let rev_parse f bsp p =
   let rec rrevparse bsp =
     match bsp with
@@ -33,11 +33,15 @@ let iter f bsp =
     | E -> ()
     | N(r,sl,sr) -> f r; riter sl; riter sr
   in riter bsp
-           
+
 let build_bsp sl =
   let rec rbuild = function
     | [] -> E
     | x::s -> let (sll, slr) = split x s in
               N(x, rbuild sll, rbuild slr)
   in rbuild sl
+
+let rec string_of_bsp = function
+  | E -> "E"
+  | N(r, ag, ad) -> "G"^(string_of_bsp ag)^"\nN"^(string_of_segment r)^"\nD"^(string_of_bsp ad)
 

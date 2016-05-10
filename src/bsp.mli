@@ -7,3 +7,5 @@ val rev_parse : (Segment.t -> 'a) -> t -> Point.t -> unit
 val iter : (Segment.t -> 'a) -> t -> unit
 
 val build_bsp : Segment.t list -> t
+
+val string_of_bsp : t -> string

@@ -19,3 +19,5 @@ val get_position : Point.t -> t -> tpos
 val split_segment : t -> t -> t option * t option
 
 val split : t -> t list -> t list * t list
+
+val string_of_segment : t -> string

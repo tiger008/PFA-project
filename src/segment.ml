@@ -9,34 +9,34 @@ type t = {id : string;
           ce : float;
          }
 type tpos = L | R | C
-
+                      
 let compteur i =
-    let etat = ref i in
-    fun () -> etat := !etat + 1; string_of_int !etat
-
+  let etat = ref i in
+  fun () -> etat := !etat + 1; string_of_int !etat
+                                             
 let get_id = compteur 0
-
+                      
 let new_segment xo yo xd yd = { id = get_id (); porig = Point.new_point xo yo; pdest = Point.new_point xd yd; lx = xd - xo; ly = yd - yo; ci = 0.; ce = 1. }
-
+                                
 let get_segment s =
   {s with porig = new_point (s.porig.x + iof ((foi s.lx) *. s.ci)) (s.porig.y + iof ((foi s.ly) *. s.ci)); pdest = new_point (s.porig.x + iof ((foi s.lx) *. s.ce)) (s.porig.y + iof ((foi s.ly) *. s.ce))}
-
+    
 let get_position p s =
   let s = get_segment s in
-    let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
-    match z with
-     | 0 -> C
-     | _ when z < 0 -> R
-     | _ -> L
-
+  let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
+  match z with
+  | 0 -> C
+  | _ when z < 0 -> R
+  | _ -> L
+           
 let get_position2 p s =
   let s = get_segment s in
-    let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
+  let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y) - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
   (*  let z = (s.porig.x + iof ((foi s.lx) *. s.ce) - s.porig.x + iof((foi s.lx) *. s.ci)) * (p.y - s.porig.y  + iof((foi s.ly) *. s.ci)) - (s.porig.y + iof((foi s.ly) *. s.ce) - s.porig.y + iof((foi s.ly) *. s.ci)) * (p.x - s.porig.x + iof((foi s.lx) *. s.ci)) in *)
-    match z with
-     | 0 -> C, z
-     | _ when z < 0 -> R, z
-     | _ -> L, z
+  match z with
+  | 0 -> C, z
+  | _ when z < 0 -> R, z
+  | _ -> L, z
 
 let posof tp s =
   match tp with
@@ -46,14 +46,17 @@ let posof tp s =
 let split_segment s1 s2 =
   let ss1 = get_segment s1 in
   let ss2 = get_segment s2 in
-  let d = (ss1.pdest.x - ss1.porig.x) * (ss2.pdest.y - ss2.porig.y) - (ss1.pdest.y - ss1.porig.y) * (ss2.pdest.x - ss2.porig.x) in
+  let d = (s1.pdest.x - s1.porig.x) * (s2.pdest.y - s2.porig.y) - (s1.pdest.y - s1.porig.y) * (s2.pdest.x - s2.porig.x) in
   let (poso, z) = get_position2 s2.porig s1 in
   let posd = get_position s2.pdest s1 in
   match d, poso with
   | 0, R -> None, Some s2
   | 0, L -> Some s2, None
   | 0, C -> None, Some s2 (* Colinéaire *)
-  | _ -> let c = (foi (-z)) /. (foi d) in
+  | _ -> let mz = foi (-z) in
+         let d = foi d in
+         let c = mz /. d in
+         Format.eprintf "-z = %f, d = %f, c = %f@." mz d c;
          match c with
          | 0. -> posof posd s2
          | _ when c < 0. || c >= 1. -> posof poso s2

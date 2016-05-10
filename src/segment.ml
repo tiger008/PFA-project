@@ -41,14 +41,25 @@ let get_position2 p s =
 let posof tp s =
   match tp with
   | L -> Some s, None
-  | R -> None, Some s
-  | _ -> None, None
+  | _ -> None, Some s (* A droite par principe s'il est confondu *)
 
 let split_segment s1 s2 =
   let ss1 = get_segment s1 in
   let ss2 = get_segment s2 in
   let d = (ss1.pdest.x - ss1.porig.x) * (ss2.pdest.y - ss2.porig.y) - (ss1.pdest.y - ss1.porig.y) * (ss2.pdest.x - ss2.porig.x) in
-  (* let d = (s1.porig.x + iof ((foi s1.lx) *. s1.ce) - s1.porig.x + iof((foi s1.lx) *. s1.ci)) * (s2.porig.y + iof((foi s2.ly) *. s2.ce) - s2.porig.y + iof((foi s2.ly) *. s2.ci)) - (s1.porig.y + iof((foi s1.ly) *. s1.ce) - s1.porig.y + iof((foi s1.ly) *. s1.ci)) * (s2.porig.x + iof ((foi s2.lx) *. s2.ce) - s2.porig.x + iof((foi s2.lx) *. s2.ci)) in *)
+  let (poso, z) = get_position2 s2.porig s1 in
+  let posd = get_position s2.pdest s1 in
+  match d, poso with
+  | 0, R -> None, Some s2
+  | 0, L -> Some s2, None
+  | 0, C -> None, Some s2 (* Colinéaire *)
+  | _ -> let c = (foi (-z)) /. (foi d) in
+         match c with
+         | 0. -> posof posd s2
+         | _ when c < 0. || c >= 1. -> posof poso s2
+         | _ -> Some { s2 with ce = c }, Some { s2 with ci = c }
+
+  (* let d = (s1.porig.x + iof ((foi s1.lx) *. s1.ce) - s1.porig.x + iof((foi s1.lx) *. s1.ci)) * (s2.porig.y + iof((foi s2.ly) *. s2.ce) - s2.porig.y + iof((foi s2.ly) *. s2.ci)) - (s1.porig.y + iof((foi s1.ly) *. s1.ce) - s1.porig.y + iof((foi s1.ly) *. s1.ci)) * (s2.porig.x + iof ((foi s2.lx) *. s2.ce) - s2.porig.x + iof((foi s2.lx) *. s2.ci)) in
   let (poso, z) = get_position2 s2.porig s1 in
   let posd = get_position s2.pdest s1 in
   match d, poso with
@@ -56,13 +67,13 @@ let split_segment s1 s2 =
   | 0, R -> None, Some s2
   | _, C when posd = L -> Some s2, None
   | _, C when posd = R -> None, Some s2
-  | _, C -> None, None
+  | _, C -> None, Some s2
   | _ -> let c = (foi (-z)) /. (foi d) in
          match c, poso with
          | 0., _ -> posof posd s2
          | _, _ when c < 0. || c >= 1. -> posof poso s2
          | _ -> Some { s2 with ce = c }, Some { s2 with ci = c }
-
+*)
 let split s sl =
   let rec srec (sll, slr) sl =
     match sl with

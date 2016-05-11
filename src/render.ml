@@ -44,16 +44,18 @@ let rec bsp_to_list = function
   | E -> []
   | N(r,ag,ad) ->
      List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
-
-let segtoarray s =
-  let xo, yo, xd, yd = (iof s.xo), (iof s.yo), (iof s.xd), (iof s.yd) in
-  (*Format.eprintf "%d, %d, %d, %d@." xo yo xd yd;*)
-  [|xo, yo, xd, yd|]
+     
 
 let rec draw sl =
   match sl with
   | [] -> ()
-  | x::s -> draw_segments (segtoarray x); draw s
+  | x::s ->
+    let xo, yo, xd, yd = (iof x.xo), (iof x.yo), (iof x.xd), (iof x.yd) in
+    (*Format.eprintf "%d, %d, %d, %d@." xo yo xd yd;*)
+    moveto ((xd + xo) / 2) ((yd + yo) / 2);
+    draw_string x.id;
+    draw_segments [|xo, yo, xd, yd|];
+    draw s
 
 let display bsp player =
   let angle1 = [(player.pos.x, player.pos.y, player.pos.x + (iof (10. *. (dcos (player.pa-30)))),

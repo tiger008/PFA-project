@@ -20,9 +20,8 @@ let new_fsegment xo yo xd yd = {
 }
 
 let fsegment_of_seg s =
-  new_fsegment ((foi s.porig.x) +. (foi s.lx) *. s.ci)
-  ((foi s.porig.y) +. (foi s.ly) *. s.ci)
-  ((foi s.porig.x) +. (foi s.lx) *. s.ce)
-  ((foi s.porig.y) +.(foi s.ly) *. s.ce)
+let (xo, yo, xd, yd) = get_coordonnees s in
+let fs = new_fsegment xo yo xd yd in
+{fs with id = s.id}
 
 

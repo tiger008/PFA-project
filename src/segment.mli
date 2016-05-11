@@ -23,3 +23,5 @@ val split : t -> t list -> t list * t list
 val string_of_segment : t -> string
 
 val get_id : unit -> string
+
+val get_coordonnees : t -> float * float * float * float

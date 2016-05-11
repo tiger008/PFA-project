@@ -101,8 +101,8 @@ let clip3D l p =
     | [] -> acc
     | r::s ->
        let r = fsegment_of_seg r in
-       let a = translation_rotation r p in
-       (*let a = hauteur_segment a1 p in*)
+       let a1 = translation_rotation r p in
+       let a = hauteur_segment a1 p in
        let q = projection a p in
        if (a.xo < 1. && a.xd < 1.)
         || (q.yo < 0. && q.yd < 0.)
@@ -112,15 +112,13 @@ let clip3D l p =
          let seg = {a with
            xo = 1.;
            yo = (a.yo +. (1. -. a.xo) *. (tan a.angle))} in
-         let a = hauteur_segment seg p in
-         rclip (a::acc) s
+         rclip (seg::acc) s
        else if a.xd < 1. then
          let seg = {a with
            xd = 1.;
            yd = (a.yd +. (1. -. a.xd) *. (tan a.angle))} in
-         let a = hauteur_segment seg p in
-         rclip (a::acc) s
-       else let a = hauteur_segment a p in rclip (a::acc) s
+         rclip (seg::acc) s
+       else rclip (a::acc) s
   in rclip [] l  
 
 let rec bsp_to_list = function
@@ -128,35 +126,50 @@ let rec bsp_to_list = function
   | N(r,ag,ad) ->
     List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
       
-let rec draw2D = function
+let rec draw2D taille = function
   | [] -> ()
   | x::s ->
     let xo, yo, xd, yd = (iof x.xo), (iof x.yo), (iof x.xd), (iof x.yd) in
-    (*Format.eprintf "%d, %d, %d, %d@." xo yo xd yd;*)
-    moveto ((xd + xo) / 2) ((yd + yo) / 2);
+    moveto ((xd/taille + xo/taille) / 2) ((yd/taille + yo/taille) / 2);
     draw_string x.id;
-    draw_segments [|xo, yo, xd, yd|];
-    draw2D s
+    draw_segments [|xo/taille, yo/taille, xd/taille, yd/taille|];
+    draw2D taille s
 
 let rec draw3D = function
     | [] -> ()
-    | x::s -> fill_poly ([|(iof x.xo, iof x.zlo); (iof x.xo, iof x.zuo); (iof x.xd, iof x.zlo); (iof x.xd, iof x.zuo)|]) ; draw3D s
+    | x::s -> fill_poly ([|(iof x.yo, iof x.zlo); (iof x.yo, iof x.zuo); (iof x.yd, iof x.zlo); (iof x.yd, iof x.zuo)|]) ; draw3D s
+                                                                                                                              
+let draw_player p taille =
+  set_color blue;
+  fill_circle (p.pos.x/taille) (p.pos.y/taille) (10/taille);
+  set_color yellow;
+  let i = ref 140 in
+  let etal = !i / 10 in
+  while !i > 10 do
+    draw_arc (p.pos.x/taille) (p.pos.y/taille) (!i/taille) (!i/taille) (p.pa - fov / 2) (p.pa + fov / 2);
+    i := !i - etal;
+  done;
+  set_color blue
 
-  
-  
-let draw_player p =
-    fill_circle p.pos.x p.pos.y 10;
-    set_color blue;
-    let i = ref 140 in
-    let etal = !i / 10 in
-    while !i > 10 do
-        draw_arc p.pos.x p.pos.y !i !i (p.pa - fov / 2) (p.pa + fov / 2);
-        i := !i - etal;
-    done;
-    set_color black
-
-let display bsp player =
-  draw_player player;
+let draw_minimap bsp player taille =
+  set_line_width 3;
+  set_color blue;
+  draw_rect 0 0 ((win_w+taille)/taille) ((win_h+taille)/taille);
+  set_color magenta;
+  fill_rect 0 0 (win_w/taille) (win_h/taille);
+  set_color black;
+  set_line_width 1;
+  draw_player player 4;
   let map = clip2D (bsp_to_list bsp) player in
-  draw2D map
+  set_color blue;
+  set_line_width 3;
+  draw2D 4 map
+              
+let display bsp player =
+  set_color magenta;
+  fill_rect 0 0 win_w win_h;
+  draw_minimap bsp player 4;
+  draw_player player 1;
+  let map = clip2D (bsp_to_list bsp) player in
+  draw2D 1 map
   

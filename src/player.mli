@@ -1,7 +1,8 @@
 type t = {
   mutable pos : Point.t;
   mutable pa : int;
-  d : float
+  d : float;
+  yeux : int
 }
 
 val new_player : Point.t -> int -> int -> int -> t

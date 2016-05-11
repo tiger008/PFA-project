@@ -14,7 +14,8 @@ type t = {
 let new_player pos pa ls fov  = {
     pos;
     pa;
-    d = ((foi ls) /. 2.) /. dtan (fov / 2)}
+    d = ((foi ls) /. 2.) /. dtan (fov / 2);
+    yeux = 0}
 
 type dir = Left | Right
 

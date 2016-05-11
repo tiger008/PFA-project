@@ -23,19 +23,35 @@ type mv = MFwd | MBwd | MLeft | MRight
 let move d p bsp =
   let npa = p.pa-90 in
   match d with
-  | MFwd -> let np = new_point (iof (ceil ((foi (p.pos.x)) -. 5. *. (dsin (npa))))) (iof (ceil ((foi (p.pos.y)) +. 5. *. (dcos (npa))))) in
+  | MFwd -> let np = new_point (iof (ceil ((foi (p.pos.x))
+                                    -. 5. *. (dsin (npa)))))
+                               (iof (ceil ((foi (p.pos.y))
+                                    +. 5. *. (dcos (npa)))))
+            in
             if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
               p.pos <- np
             else ()
-  | MBwd -> let np = new_point (iof (floor ((foi (p.pos.x)) +. 5. *. (dsin (npa))))) (iof (floor ((foi (p.pos.y)) -. 5. *. (dcos (npa))))) in
+  | MBwd -> let np = new_point (iof (floor ((foi (p.pos.x))
+                                    +. 5. *. (dsin (npa)))))
+                               (iof (floor ((foi (p.pos.y))
+                                    -. 5. *. (dcos (npa)))))
+            in
             if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
               p.pos <- np
             else ()
-  | MLeft -> let np = new_point (iof (ceil ((foi (p.pos.x)) -. 5. *. (dcos (npa))))) (iof (ceil ((foi (p.pos.y)) -. 5. *. (dsin (npa))))) in
-            if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
+  | MLeft -> let np = new_point (iof (ceil ((foi (p.pos.x))
+                                    -. 5. *. (dcos (npa)))))
+                                (iof (ceil ((foi (p.pos.y))
+                                    -. 5. *. (dsin (npa)))))
+             in
+             if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
                p.pos <- np
              else ()
-  | MRight -> let np = new_point (iof (floor ((foi (p.pos.x)) +. 5. *. (dcos (npa))))) (iof (floor ((foi (p.pos.y)) +. 5. *. (dsin (npa))))) in
-            if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
+  | MRight -> let np = new_point (iof (floor ((foi (p.pos.x))
+                                    +. 5. *. (dcos (npa)))))
+                                 (iof (floor ((foi (p.pos.y))
+                                    +. 5. *. (dsin (npa)))))
+              in
+              if not (detect_real (new_segment p.pos.x p.pos.y np.x np.y) bsp) then
                 p.pos <- np
               else ()

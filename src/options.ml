@@ -27,7 +27,7 @@ let set_mode = function
   | _ -> raise (Arg.Bad "2D or 3D only")
 
 
-let specs = 
+let specs =
   [ "-mode", Arg.String set_mode, "<2D | 3D> 2D or 3D display";
     "-fov", Arg.Set_int fov, " field of vision (angle de vision)";
     "-dims", Arg.Tuple [Arg.Set_int win_w; Arg.Set_int win_h], 

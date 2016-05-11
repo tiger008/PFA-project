@@ -43,5 +43,7 @@ let build_bsp sl =
 
 let rec string_of_bsp = function
   | E -> "E"
-  | N(r, ag, ad) -> "G"^(string_of_bsp ag)^"\nN"^(string_of_segment r)^"\nD"^(string_of_bsp ad)
+  | N(r, ag, ad) -> "G"^(string_of_bsp ag)
+                    ^"\nN"^(string_of_segment r)
+                    ^"\nD"^(string_of_bsp ad)
 

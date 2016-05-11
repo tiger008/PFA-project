@@ -1,9 +1,10 @@
 type t = {
   mutable pos : Point.t;
   mutable pa : int;
+  d : float
 }
 
-val new_player : Point.t -> int -> t
+val new_player : Point.t -> int -> int -> int -> t
 
 type dir = Left | Right
 

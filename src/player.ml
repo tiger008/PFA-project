@@ -7,9 +7,13 @@ open Segment
 type t = {
     mutable pos : Point.t;
     mutable pa : int;
+    d : float;
 }
 
-let new_player pos pa = { pos; pa }
+let new_player pos pa ls fov  = {
+    pos;
+    pa;
+    d = ((foi ls) /. 2.) /. dtan (fov / 2)}
 
 type dir = Left | Right
 

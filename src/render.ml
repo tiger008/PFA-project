@@ -17,6 +17,15 @@ let translation_rotation_inverse s p =
   let ns = translation (rotation s p.pa) p.pos in
   {ns with angle = calc_angle ns}
 
+let projection s p =
+    {s with
+    x0 = p.d;
+    y0 = s.y0 * p.d / s.x0;
+    x0 = p.d;
+    y0 = s.yd * p.d / s.xd
+    }
+
+
 let clip l p =
   let rec rclip acc = function
     | [] -> acc
@@ -44,7 +53,6 @@ let rec bsp_to_list = function
   | E -> []
   | N(r,ag,ad) ->
      List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
-     
 
 let rec draw sl =
   match sl with
@@ -58,9 +66,11 @@ let rec draw sl =
     draw s
 
 let display bsp player =
-  let angle1 = [(player.pos.x, player.pos.y, player.pos.x + (iof (10. *. (dcos (player.pa-30)))),
+  let angle1 = [(player.pos.x, player.pos.y, player.pos.x
+                    + (iof (10. *. (dcos (player.pa-30)))),
                     player.pos.y + (iof (20. *. (dsin (player.pa-30)))))] in
-  let angle2 = [(player.pos.x, player.pos.y, player.pos.x + (iof (10. *. (dcos (player.pa+30)))),
+  let angle2 = [(player.pos.x, player.pos.y, player.pos.x
+                    + (iof (10. *. (dcos (player.pa+30)))),
                     player.pos.y + (iof (20. *. (dsin (player.pa+30)))))] in
   draw_segments (Array.of_list angle1);
   draw_segments (Array.of_list angle2);

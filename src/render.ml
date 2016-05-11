@@ -85,7 +85,7 @@ let algo3D s =
     end
   else ()
 
-let hauteur_segment s p =
+let segment_vertices s p =
   { s with
     zuo = (foi (win_h / 2)) +. ((((foi ceiling_h) -. step_dist) *. p.d) /. s.xo);
     zlo = (foi (win_h / 2)) +. ((((foi floor_h) -. step_dist)  *. p.d) /. s.xo);
@@ -101,7 +101,7 @@ let clip3D l p =
     | r::s ->
        let r = fsegment_of_seg r in
        let a1 = translation_rotation r p in
-       let a = hauteur_segment a1 p in
+       let a = segment_vertices a1 p in
        let q = projection a p in
        if (a.xo < 1. && a.xd < 1.)
         || (q.yo < 0. && q.yd < 0.)
@@ -136,10 +136,10 @@ let rec draw2D taille = function
 
 let rec draw3D = function
     | [] -> ()
-    | x::s -> fill_poly ([|(iof x.yo, iof x.zlo);
-                           (iof x.yo, iof x.zuo);
-                           (iof x.yd, iof x.zlo);
-                           (iof x.yd, iof x.zuo)|]);
+    | x::s -> fill_poly ([|(iof x.xo, iof x.zlo);
+                           (iof x.xo, iof x.zuo);
+                           (iof x.xd, iof x.zld);
+                           (iof x.xd, iof x.zud)|]);
               draw3D s
 
 let draw_player p taille =
@@ -156,16 +156,14 @@ let draw_player p taille =
   done;
   set_color blue
 
-let draw_minimap bsp player taille =
+let draw_minimap map player taille =
   set_line_width 3;
   set_color blue;
   draw_rect 0 0 ((win_w + taille) / taille) ((win_h + taille) / taille);
   set_color magenta;
   fill_rect 0 0 (win_w / taille) (win_h / taille);
-  set_color black;
   set_line_width 1;
   draw_player player 4;
-  let map = clip2D (bsp_to_list bsp) player in
   set_color blue;
   set_line_width 3;
   draw2D 4 map
@@ -173,7 +171,8 @@ let draw_minimap bsp player taille =
 let display bsp player =
   set_color magenta;
   fill_rect 0 0 win_w win_h;
-  draw_minimap bsp player 4;
+  set_line_width 3;
   draw_player player 1;
   let map = clip2D (bsp_to_list bsp) player in
+  draw_minimap map player 4;
   draw2D 1 map

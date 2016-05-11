@@ -35,7 +35,6 @@ let get_segment s =
 }
 
 let get_position p s =
-  let s = get_segment s in
   let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y)
         - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
   match z with
@@ -44,7 +43,6 @@ let get_position p s =
   | _ -> L
 
 let get_position2 p s =
-  let s = get_segment s in
   let z = (s.pdest.x - s.porig.x) * (p.y - s.porig.y)
         - (s.pdest.y - s.porig.y) * (p.x - s.porig.x) in
   match z with
@@ -79,7 +77,7 @@ let split s sl =
   let rec srec (sll, slr) sl =
     match sl with
     | [] -> sll, slr
-    | x::f -> let l, r = split_segment s x in
+    | x::f -> let l, r = split_segment (get_segment s) x in
               match l, r with
               | None, None -> srec (sll, slr) f
               | None, Some d -> srec (sll, d::slr) f

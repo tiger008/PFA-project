@@ -8,6 +8,7 @@ type t = {
     mutable pos : Point.t;
     mutable pa : int;
     d : float;
+    yeux : int
 }
 
 let new_player pos pa ls fov  = {

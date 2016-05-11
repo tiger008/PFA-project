@@ -22,7 +22,9 @@ let () =
   open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try
+    set_color blue;
     display map player;
+    fill_poly [|(100,300); (200, 400);(44,650); (56, 764)|];
     synchronize ();
     while true do
       let s = Graphics.wait_next_event [Graphics.Key_pressed] in

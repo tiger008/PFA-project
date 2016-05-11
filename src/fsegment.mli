@@ -4,7 +4,13 @@ type t = {
     yo : float;
     xd : float;
     yd : float;
-    angle : float
+    angle : float;
+    mutable zuo : float;
+    mutable zlo : float;
+    mutable zud : float;
+    mutable zld : float;
+    mutable co : float;
+    mutable cd : float
 }
 
 val new_fsegment : float -> float -> float -> float -> t

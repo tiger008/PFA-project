@@ -7,7 +7,13 @@ type t = {
     yo : float;
     xd : float;
     yd : float;
-    angle : float
+    angle : float;
+    mutable zuo : float;
+    mutable zlo : float;
+    mutable zud : float;
+    mutable zld : float;
+    mutable co : float;
+    mutable cd : float
 }
 
 let new_fsegment xo yo xd yd = {
@@ -16,8 +22,15 @@ let new_fsegment xo yo xd yd = {
    yo = yo;
    xd = xd;
    yd = yd;
-   angle = atan2 (yd -. yo) (xd -. xo)
+   angle = atan2 (yd -. yo) (xd -. xo);
+    zuo = 0.;
+    zlo = 0.;
+    zud = 0.;
+    zld = 0.;
+    co = 0.;
+    cd = 0.
 }
+   
 
 let fsegment_of_seg s =
 let (xo, yo, xd, yd) = get_coordonnees s in

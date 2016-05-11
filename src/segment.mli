@@ -5,7 +5,7 @@ type t = {
   lx : int;
   ly : int;
   ci : float;
-  ce : float;
+  ce : float
 }
            
 type tpos = L | R | C

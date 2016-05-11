@@ -25,7 +25,7 @@ let projection s p =
     xd = p.d;
     yd = (foi win_w) /. 2. -. s.yd *. p.d /. s.xd
     }
-      
+
 let clip2D l p =
   let rec rclip acc = function
     | [] -> acc
@@ -52,7 +52,6 @@ let clip2D l p =
          rclip (r::acc) s
        else rclip (r::acc) s
   in rclip [] l
-  
 
 let algo3D s =
   let ls = foi win_w in
@@ -85,7 +84,7 @@ let algo3D s =
       s.zld <- s.zld -. ((s.cd -. ls) *. dl)
     end
   else ()
-      
+
 let hauteur_segment s p =
   { s with
     zuo = (foi (win_h / 2)) +. ((((foi ceiling_h) -. step_dist) *. p.d) /. s.xo);
@@ -125,7 +124,7 @@ let rec bsp_to_list = function
   | E -> []
   | N(r,ag,ad) ->
     List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
-      
+
 let rec draw2D taille = function
   | [] -> ()
   | x::s ->
@@ -137,16 +136,22 @@ let rec draw2D taille = function
 
 let rec draw3D = function
     | [] -> ()
-    | x::s -> fill_poly ([|(iof x.yo, iof x.zlo); (iof x.yo, iof x.zuo); (iof x.yd, iof x.zlo); (iof x.yd, iof x.zuo)|]) ; draw3D s
-                                                                                                                              
+    | x::s -> fill_poly ([|(iof x.yo, iof x.zlo);
+                           (iof x.yo, iof x.zuo);
+                           (iof x.yd, iof x.zlo);
+                           (iof x.yd, iof x.zuo)|]);
+              draw3D s
+
 let draw_player p taille =
   set_color blue;
-  fill_circle (p.pos.x/taille) (p.pos.y/taille) (10/taille);
+  fill_circle (p.pos.x / taille) (p.pos.y / taille) (10 / taille);
   set_color yellow;
   let i = ref 140 in
   let etal = !i / 10 in
   while !i > 10 do
-    draw_arc (p.pos.x/taille) (p.pos.y/taille) (!i/taille) (!i/taille) (p.pa - fov / 2) (p.pa + fov / 2);
+    draw_arc (p.pos.x / taille) (p.pos.y / taille)
+      (!i / taille) (!i / taille)
+      (p.pa - fov / 2) (p.pa + fov / 2);
     i := !i - etal;
   done;
   set_color blue
@@ -154,9 +159,9 @@ let draw_player p taille =
 let draw_minimap bsp player taille =
   set_line_width 3;
   set_color blue;
-  draw_rect 0 0 ((win_w+taille)/taille) ((win_h+taille)/taille);
+  draw_rect 0 0 ((win_w + taille) / taille) ((win_h + taille) / taille);
   set_color magenta;
-  fill_rect 0 0 (win_w/taille) (win_h/taille);
+  fill_rect 0 0 (win_w / taille) (win_h / taille);
   set_color black;
   set_line_width 1;
   draw_player player 4;
@@ -164,7 +169,7 @@ let draw_minimap bsp player taille =
   set_color blue;
   set_line_width 3;
   draw2D 4 map
-              
+
 let display bsp player =
   set_color magenta;
   fill_rect 0 0 win_w win_h;
@@ -172,4 +177,3 @@ let display bsp player =
   draw_player player 1;
   let map = clip2D (bsp_to_list bsp) player in
   draw2D 1 map
-  

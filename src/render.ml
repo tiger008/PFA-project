@@ -21,9 +21,9 @@ let translation_rotation_inverse s p =
 let projection s p =
     {s with
     xo = p.d;
-    yo = (foi win_w) /. 2. -. s.yo *. p.d /. s.xo;
+    yo = ((foi win_w) /. 2.) -. (s.yo *. p.d /. s.xo);
     xd = p.d;
-    yd = (foi win_w) /. 2. -. s.yd *. p.d /. s.xd
+    yd = ((foi win_w) /. 2.) -. (s.yd *. p.d /. s.xd)
     }
 
 
@@ -58,8 +58,7 @@ let rec bsp_to_list = function
   | N(r,ag,ad) ->
      List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
 
-let rec draw sl =
-  match sl with
+let rec draw = function
   | [] -> ()
   | x::s ->
     let xo, yo, xd, yd = (iof x.xo), (iof x.yo), (iof x.xd), (iof x.yd) in
@@ -69,14 +68,19 @@ let rec draw sl =
     draw_segments [|xo, yo, xd, yd|];
     draw s
 
+let draw_player p =
+    fill_circle p.pos.x p.pos.y 10;
+    set_color blue;
+    let i = ref 140 in
+    let etal = !i / 10 in
+    while !i > 10 do
+        draw_arc p.pos.x p.pos.y !i !i (p.pa - fov / 2) (p.pa + fov / 2);
+        i := !i - etal;
+    done;
+    set_color black
+
+
 let display bsp player =
-  let angle1 = [(player.pos.x, player.pos.y, player.pos.x
-                    + (iof (100. *. (dcos (player.pa-30)))),
-                    player.pos.y + (iof (200. *. (dsin (player.pa-30)))))] in
-  let angle2 = [(player.pos.x, player.pos.y, player.pos.x
-                    + (iof (100. *. (dcos (player.pa+30)))),
-                    player.pos.y + (iof (200. *. (dsin (player.pa+30)))))] in
-  draw_segments (Array.of_list angle1);
-  draw_segments (Array.of_list angle2);
   let map = clip (bsp_to_list bsp) player in
+  draw_player player;
   draw map

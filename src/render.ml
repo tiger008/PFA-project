@@ -129,9 +129,9 @@ let rec draw2D taille = function
   | [] -> ()
   | x::s ->
     let xo, yo, xd, yd = (iof x.xo), (iof x.yo), (iof x.xd), (iof x.yd) in
-    moveto ((xd/taille + xo/taille) / 2) ((yd/taille + yo/taille) / 2);
+    moveto ((xd / taille + xo / taille) / 2) ((yd / taille + yo / taille) / 2);
     draw_string x.id;
-    draw_segments [|xo/taille, yo/taille, xd/taille, yd/taille|];
+    draw_segments [|xo / taille, yo / taille, xd / taille, yd / taille|];
     draw2D taille s
 
 let rec draw3D = function
@@ -142,37 +142,43 @@ let rec draw3D = function
                            (iof x.xd, iof x.zud)|]);
               draw3D s
 
-let draw_player p taille =
+let draw_player taille p =
   set_color blue;
-  fill_circle (p.pos.x / taille) (p.pos.y / taille) (10 / taille);
+  let px = p.pos.x / taille in
+  let py = p.pos.y / taille in
+  fill_circle px py (10 / taille);
   set_color yellow;
-  let i = ref 140 in
+  let i = ref (140 / taille) in
   let etal = !i / 10 in
+  let fov = fov / 2 in
   while !i > 10 do
-    draw_arc (p.pos.x / taille) (p.pos.y / taille)
-      (!i / taille) (!i / taille)
-      (p.pa - fov / 2) (p.pa + fov / 2);
+    draw_arc px py !i !i (p.pa - fov) (p.pa + fov);
     i := !i - etal;
   done;
   set_color blue
 
 let draw_minimap map player taille =
   set_line_width 3;
+  (* contour *)
   set_color blue;
   draw_rect 0 0 ((win_w + taille) / taille) ((win_h + taille) / taille);
+  (* fond *)
   set_color magenta;
-  fill_rect 0 0 (win_w / taille) (win_h / taille);
+  fill_rect 0 0 (win_w / taille) (win_h / taille); 
+  set_color black;
   set_line_width 1;
-  draw_player player 4;
+  draw_player taille player;
   set_color blue;
   set_line_width 3;
   draw2D 4 map
 
 let display bsp player =
-  set_color magenta;
-  fill_rect 0 0 win_w win_h;
-  set_line_width 3;
-  draw_player player 1;
+  (* fond *)
+  set_color green;
+  fill_rect 0 0 win_w (win_h / 2);
+  set_color white;
+  fill_rect 0 (win_h / 2) win_w win_h;
+  draw_player 1 player;
   let map = clip2D (bsp_to_list bsp) player in
   draw_minimap map player 4;
   draw2D 1 map

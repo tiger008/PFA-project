@@ -103,11 +103,14 @@ let split s sl =
               | Some g, Some d -> srec (g::sll, d::slr) f
   in
   let l, r = srec ([], []) sl in
-  Format.eprintf "Splitter : %a@." print_segment s;
-  Format.eprintf "Gauche : ";
-  List.iter (Format.eprintf "%a@." print_segment) l; 
-  Format.eprintf "Droite : ";
-  List.iter (Format.eprintf "%a@." print_segment) r;
-  Format.eprintf "--------------@.";
+  (*
+    (* DEBUG *)
+    Format.eprintf "Splitter : %a@." print_segment s;
+    Format.eprintf "Gauche : ";
+    List.iter (Format.eprintf "%a@." print_segment) l; 
+    Format.eprintf "Droite : ";
+    List.iter (Format.eprintf "%a@." print_segment) r;
+    Format.eprintf "--------------@.";
+  *)
   l, r
 

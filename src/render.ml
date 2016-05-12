@@ -30,34 +30,52 @@ let clip2D l p =
   let rec rclip acc = function
     | [] -> acc
     | r::s ->
-       let r = fsegment_of_seg r in
-       let a = translation_rotation r p in
-       let q = projection_h a p in
-       if (a.xo < 1. && a.xd < 1.)
-        || (q.yo < 0. && q.yd < 0.)
-        || (q.yo > foi win_w && q.yd > foi win_w) then
-         rclip acc s
-       else if a.xo < 1. then
-         let seg = {a with
-                     xo = 1.;
-                     yo = (a.yo +. (1. -. a.xo) *. (tan a.angle))} in
-         let r = translation_rotation_inverse seg p in
-         rclip (r::acc) s
-       else if a.xd < 1. then
-         let seg = {a with
-                     xd = 1.;
-                     yd = (a.yd +. (1. -. a.xd) *. (tan a.angle))} in
-         let r = translation_rotation_inverse seg p in
-         rclip (r::acc) s
-       else rclip (r::acc) s
+      let r = fsegment_of_seg r in
+      let tr = translation_rotation r p in
+      let ph = projection_h tr p in
+      (* Segment complètement masqués *)
+      if (tr.xo < 1. && tr.xd < 1.)
+        || (ph.yo < 0. && ph.yd < 0.)
+        || (ph.yo > foi win_w && ph.yd > foi win_w) then
+        rclip acc s
+      else if tr.xo < 1. then
+        (* Calcul des nouvelles coordonnées *)
+        let tr = {tr with
+          xo = 1.;
+          yo = (tr.yo +. (1. -. tr.xo) *. (tan tr.angle))} in
+        (* On projette et determine si le segment est invisible *)
+        let ph = projection_h tr p in
+        if (ph.yo < 0. && ph.yd < 0.)
+          || (ph.yo > foi win_w && ph.yd > foi win_w) then
+          rclip acc s
+        else
+          let r = translation_rotation_inverse tr p in
+          rclip (r::acc) s
+      else if tr.xd < 1. then
+        (* Calcul des nouvelles coordonnées *)
+        let tr = {tr with
+          xd = 1.;
+          yd = (tr.yd +. (1. -. tr.xd) *. (tan tr.angle))} in
+        (* On projette et determine si le segment est invisible *)
+        let ph = projection_h tr p in
+        if (ph.yo < 0. && ph.yd < 0.)
+          || (ph.yo > foi win_w && ph.yd > foi win_w) then
+          rclip acc s
+        else
+          let r = translation_rotation_inverse tr p in
+          rclip (r::acc) s
+      else rclip (r::acc) s
   in rclip [] l
 
 let algo3D s =
   let ls = foi win_w in
   let du = (s.zud -. s.zuo) /. (s.cd -. s.co) in
   let dl = (s.zld -. s.zlo) /. (s.cd -. s.co) in
-  Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f) (%.1f, %.1f)@."
-    s.co s.zlo s.zuo s.cd s.zld s.zud du dl;
+  (*
+     (* DEBUG *)
+     Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f) (%.1f, %.1f)@."
+     s.co s.zlo s.zuo s.cd s.zld s.zud du dl;
+  *)
   if s.co < 0. then
     begin
       s.zuo <- s.zuo -. (s.co *. du);
@@ -81,10 +99,14 @@ let algo3D s =
       s.zud <- s.zud -. ((s.cd -. ls) *. du);
       s.zld <- s.zld -. ((s.cd -. ls) *. dl);
       s.cd <- ls;
-    end;
+    end
+(*
+(* DEBUG *)
+  ;
   Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\
                   ---------------------@."
-    s.co s.zlo s.zuo s.cd s.zld s.zud
+  s.co s.zlo s.zuo s.cd s.zld s.zud
+*)
 
 
 let projection_v s p =
@@ -105,23 +127,38 @@ let clip3D l p =
        let tr = translation_rotation r p in
        let pv = projection_v tr p in
        let ph = projection_h pv p in
-       if (tr.xo < 1. && tr.xd < 1.)
+      (* Segment complètement masqués *)
+      if (tr.xo < 1. && tr.xd < 1.)
         || (ph.yo < 0. && ph.yd < 0.)
         || (ph.yo > foi win_w && ph.yd > foi win_w) then
-         rclip acc s
-       else if tr.xo < 1. then
-         let seg = projection_h (projection_v ({tr with
-           xo = 1.;
-           yo = (tr.yo +. (1. -. tr.xo) *. (tan tr.angle))}) p) p
-         in
-         rclip (seg::acc) s
-       else if tr.xd < 1. then
-         let seg = projection_h (projection_v ({tr with
-           xd = 1.;
-           yd = (tr.yd +. (1. -. tr.xd) *. (tan tr.angle))}) p) p
-         in
-         rclip (seg::acc) s
-       else rclip (ph::acc) s
+        rclip acc s
+      else if tr.xo < 1. then
+        (* Calcul des nouvelles coordonnées *)
+        let tr = {tr with
+          xo = 1.;
+          yo = (tr.yo +. (1. -. tr.xo) *. (tan tr.angle))} in
+        (* On projette et determine si le segment est invisible *)
+        let ph = projection_h tr p in
+        if (ph.yo < 0. && ph.yd < 0.)
+          || (ph.yo > foi win_w && ph.yd > foi win_w) then
+          rclip acc s
+        else
+          let r = projection_h (projection_v tr p) p in
+          rclip (r::acc) s
+      else if tr.xd < 1. then
+        (* Calcul des nouvelles coordonnées *)
+        let tr = {tr with
+          xd = 1.;
+          yd = (tr.yd +. (1. -. tr.xd) *. (tan tr.angle))} in
+        (* On projette et determine si le segment est invisible *)
+        let ph = projection_h tr p in
+        if (ph.yo < 0. && ph.yd < 0.)
+          || (ph.yo > foi win_w && ph.yd > foi win_w) then
+          rclip acc s
+        else
+          let r = projection_h (projection_v tr p) p in
+          rclip (r::acc) s
+      else rclip (ph::acc) s
   in rclip [] l
 
 let rec bsp_to_list bsp p =
@@ -143,22 +180,48 @@ let rec draw2D taille = function
     draw_segments [|xo, yo, xd, yd|];
     draw2D taille s
 
-let rec draw3D = function
+let rec draw3D taille = function
   | [] -> ()
   | x::s ->
-      algo3D x;
-      set_color red;
-      draw_poly ([|(iof x.co, iof x.zlo);
-                   (iof x.co, iof x.zuo);
-                   (iof x.cd, iof x.zud);
-                   (iof x.cd, iof x.zld)|]);
-      set_color blue;
-      fill_poly ([|(iof x.co, iof x.zlo);
-                   (iof x.co, iof x.zuo);
-                   (iof x.cd, iof x.zud);
-                   (iof x.cd, iof x.zld)|]);
-      Printf.printf "(x.co = %f, zlo = %f)\n(x.co = %f, zuo = %f)\n(x.cd = %f, zud = %f)\n(x.cd = %f, zld = %f)\n" x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
-      draw3D s
+    algo3D x;
+    let (co, cd, zlo, zuo, zud, zld) =
+      ((iof x.co) / taille,
+       (iof x.cd) / taille,
+       (iof x.zlo) / taille,
+       (iof x.zuo) / taille,
+       (iof x.zud) / taille,
+       (iof x.zld) / taille)
+    in
+    set_color (rgb 218 165 32);
+    fill_poly ([|(co, zlo);
+                 (co, zuo);
+                 (cd, zud);
+                 (cd, zld)|]);
+    set_color red;
+    Format.eprintf " %s (ci = %f, ce = %f)\n@." x.id x.ci x.ce;
+    if x.ci > 0. && x.ce = 1. then
+      draw_segments ([|(co, zlo, cd, zld);
+                       (co, zuo, cd, zud);
+                       (cd, zld, cd, zud)|])
+    else if x.ce < 1. && x.ci = 0. then
+      draw_segments ([|(co, zlo, cd, zld);
+                       (co, zuo, cd, zud);
+                       (co, zlo, co, zuo)|])
+    else if x.ci > 0. && x.ce < 1. then
+      draw_segments ([|(co, zlo, cd, zld);
+                       (co, zuo, cd, zud)|])
+    else
+      draw_poly ([|(co, zlo);
+                      (co, zuo);
+                      (cd, zud);
+                      (cd, zld)|]);
+      (*
+        (* DEBUG *)
+        Printf.printf "(x.co = %f, zlo = %f)\n(x.co = %f, zuo = %f)"
+        ^"\n(x.cd = %f, zud = %f)\n(x.cd = %f, zld = %f)\n"
+        x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
+      *)
+      draw3D taille s
 
 let draw_player taille p =
   set_color blue;
@@ -178,28 +241,40 @@ let draw_player taille p =
 let draw_minimap map player taille =
   set_line_width 2;
   (* contour *)
-  set_color blue;
+  set_color black;
   draw_rect 0 0 ((win_w + taille) / taille) ((win_h + taille) / taille);
   (* fond *)
-  set_color magenta;
+  set_color cyan;
   fill_rect 0 0 (win_w / taille) (win_h / taille);
-  set_color black;
   set_line_width 1;
   draw_player taille player;
   set_color blue;
   set_line_width 2;
-  draw2D 4 map
+  draw2D (scale * 4) map
 
-let display bsp player =
-  (* fond *)
-  set_color green;
-  fill_rect 0 0 win_w (win_h / 2);
-  set_color white;
-  fill_rect 0 (win_h / 2) win_w win_h;
-  set_color black;
-  let map3D = clip3D (bsp_to_list bsp player.pos) player in
-  let map2D = List.rev_map fsegment_of_seg (bsp_to_list bsp player.pos) in
-  draw3D map3D;
-  draw_minimap map2D player 4;
-  (* 2D only *)
-  (* draw_player 1 player *)
+let display bsp player =      
+  if get_mode () = TwoD then
+    begin
+      (* fond *)
+      set_color cyan;
+      fill_rect 0 0 win_w win_h;
+      set_color black;
+      draw_player scale player;
+      let map2D = clip2D (bsp_to_list bsp player.pos) player in
+      draw2D scale map2D
+    end
+  else
+    begin
+      set_color (rgb 102 51 0);
+      fill_rect 0 0 win_w (win_h / 2);
+      set_color (rgb 51 204 255);
+      fill_rect 0 (win_h / 2) win_w win_h;
+      set_color black;
+      let map3D = clip3D (bsp_to_list bsp player.pos) player in
+      draw3D scale map3D;
+      if minimap then
+        begin
+          let map2D = List.rev_map fsegment_of_seg (bsp_to_list bsp player.pos) in
+          draw_minimap map2D player (scale * 4)
+        end;
+    end

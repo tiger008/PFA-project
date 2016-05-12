@@ -4,6 +4,8 @@ type t = {
     yo : float;
     xd : float;
     yd : float;
+    ci : float;
+    ce : float;
     angle : float;
     mutable zuo : float;
     mutable zlo : float;

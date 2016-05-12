@@ -1,6 +1,8 @@
 type tmode = TwoD | ThreeD
+type tlang = FR | US
 
-val mode : tmode
+val change_mode : tmode -> unit
+val get_mode : unit -> tmode
 
 val cin : in_channel
 
@@ -12,6 +14,7 @@ val floor_h : int
 val wall_h : int
 
 val fov : int
+val hov : int
 
 val step_dist : float
 
@@ -23,3 +26,6 @@ val minimap : bool
  
 val debug : bool
 val debug_bsp : bool
+
+val change_lang : tlang -> unit
+val get_lang : unit -> tlang

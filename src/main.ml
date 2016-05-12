@@ -14,26 +14,35 @@ let rec seglist il acc =
   | [] -> acc
   | (xo, yo, xd, yd)::s -> seglist s ((new_segment xo yo xd yd)::acc)
 
+let touche = function
+  | FR -> ('z', 's', 'q', 'd', 'a', 'e')
+  | _ -> ('w', 's', 'a', 'd', 'q', 'e')
+
 let () =
   let ((x, y, a), sl) = read_lab (open_in argv.(1))  in
   let player = new_player (new_point x y) a win_w fov in
   let map = build_bsp (seglist sl []) in
+  (*
+    (* DEBUG *)
     Printf.printf "%s\n" (string_of_bsp map);
+  *)
   open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try
     display map player;
-    draw_poly [|(0, 0); (0, 300); (300, 300); (300, 0)|];
     synchronize ();
     while true do
+      let (fw, bw, left, right, rleft, rright) = touche (get_lang ()) in
       let s = Graphics.wait_next_event [Graphics.Key_pressed] in
       let _ = match s.key with
-        | 'w' | 'z' -> move MFwd player map
-        | 's' -> move MBwd player map
-        | 'a' | 'q'-> move MLeft player map
-        | 'd' -> move MRight player map
-        | 'e' -> rotate Left player
-        | 'r' -> rotate Right player
+        | _ when s.key = fw -> move MFwd player map
+        | _ when s.key = bw -> move MBwd player map
+        | _ when s.key = left-> move MLeft player map
+        | _ when s.key = right -> move MRight player map
+        | _ when s.key = rleft -> rotate Left player
+        | _ when s.key = rright -> rotate Right player
+        | 'l' -> change_lang (get_lang ())
+        | 'c' -> change_mode (get_mode ())
         | '\027' -> raise Exit
         | _ -> ()
       in

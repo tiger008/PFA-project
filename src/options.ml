@@ -1,21 +1,24 @@
 type tmode = TwoD | ThreeD
+type tlang = FR | US
 
 let usage = "usage: ./bsp file.lab"
 let file = ref ""
 
 let mode = ref TwoD
+let lang = ref FR
 
 let win_w = ref 800
 let win_h = ref 800
 
 let fov = ref 60
+let hov = ref 1
 
 let step_dist = ref 10
 
 let xmin = ref 1
 let xmax = 9000.
 
-let scale = ref 5
+let scale = ref 1
 let minimap = ref false
 
 let debug = ref false
@@ -25,11 +28,30 @@ let set_mode = function
   | "2D" -> mode := TwoD
   | "3D" -> mode := ThreeD
   | _ -> raise (Arg.Bad "2D or 3D only")
+    
+let change_mode = function
+  | TwoD -> mode := ThreeD
+  | _ -> mode := TwoD
+    
+let get_mode () = !mode
+  
+let set_lang = function
+  | "FR" -> lang := FR
+  | "US" -> lang := US
+  | _ -> raise (Arg.Bad "FR or US only")
+    
+let change_lang = function
+  | FR -> lang := US
+  | _ -> lang := FR
+    
+let get_lang () = !lang
 
-
+  
 let specs =
   [ "-mode", Arg.String set_mode, "<2D | 3D> 2D or 3D display";
+    "-lang", Arg.String set_lang, " <FR | US> FR or US lang";
     "-fov", Arg.Set_int fov, " field of vision (angle de vision)";
+    "-hov", Arg.Set_int hov, " height of vision (hauteur de vision)";
     "-dims", Arg.Tuple [Arg.Set_int win_w; Arg.Set_int win_h], 
     " set the dimensions of the graph";
     "-scale", Arg.Set_int scale, " scale of the 2D map";
@@ -52,8 +74,7 @@ let cin =
   match !ofile with 
     | Some f -> file := f ; open_in f
     | None -> raise (Arg.Bad "no file provided")
-
-
+  
 let file = !file
 
 let win_w = !win_w
@@ -65,9 +86,8 @@ let ceiling_h = win_h / 4
 let floor_h = 0
 let wall_h = ceiling_h - floor_h
 
-let mode = !mode
-
 let fov = !fov
+let hov = !hov * ceiling_h / 2 
 
 let step_dist = float !step_dist
 

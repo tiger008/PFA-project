@@ -247,7 +247,11 @@ let draw_minimap map player taille =
   set_color cyan;
   fill_rect 0 0 (win_w / taille) (win_h / taille);
   set_line_width 1;
-  draw_player taille player;
+  if player.pos.x >= 0
+     && player.pos.y >=0
+     && player.pos.x <= win_w
+     && player.pos.y <= win_h then
+    draw_player taille player;
   set_color blue;
   set_line_width 2;
   draw2D (scale * 4) map

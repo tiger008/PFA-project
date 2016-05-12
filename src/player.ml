@@ -8,15 +8,18 @@ type t = {
     mutable pos : Point.t;
     mutable pa : int;
     d : float;
-    yeux : float
+    mutable yeux : float
 }
 
 let new_player pos pa ls fov  = {
     pos;
     pa;
     d = ((foi ls) /. 2.) /. dtan (fov / 2);
-    yeux = foi hov
-}
+    yeux = foi (get_hov ())
+  }
+
+let change_yeux p hov =
+  p.yeux <- foi hov
 
 type dir = Left | Right
 

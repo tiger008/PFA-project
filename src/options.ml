@@ -46,6 +46,11 @@ let change_lang = function
     
 let get_lang () = !lang
 
+let increment_hov () =
+  hov := !hov + 1
+
+let decrement_hov () =
+  hov := !hov - 1
   
 let specs =
   [ "-mode", Arg.String set_mode, "<2D | 3D> 2D or 3D display";
@@ -87,7 +92,7 @@ let floor_h = 0
 let wall_h = ceiling_h - floor_h
 
 let fov = !fov
-let hov = !hov * ceiling_h / 2 
+let get_hov () = !hov * ceiling_h / 2
 
 let step_dist = float !step_dist
 

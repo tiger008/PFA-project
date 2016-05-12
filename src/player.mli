@@ -2,7 +2,7 @@ type t = {
   mutable pos : Point.t;
   mutable pa : int;
   d : float;
-  yeux : int
+  yeux : float
 }
 
 val new_player : Point.t -> int -> int -> int -> t

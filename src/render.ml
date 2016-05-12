@@ -18,7 +18,7 @@ let translation_rotation_inverse s p =
   let ns = translation (rotation s p.pa) p.pos in
   {ns with angle = calc_angle ns}
 
-let projection s p =
+let projection_h s p =
     {s with
     xo = p.d;
     yo = (foi win_w) /. 2. -. s.yo *. p.d /. s.xo;
@@ -32,8 +32,7 @@ let clip2D l p =
     | r::s ->
        let r = fsegment_of_seg r in
        let a = translation_rotation r p in
-       Format.eprintf "zc =  %f, zf = %f@." a.zud a.zuo; 
-       let q = projection a p in
+       let q = projection_h a p in
        if (a.xo < 1. && a.xd < 1.)
         || (q.yo < 0. && q.yd < 0.)
         || (q.yo > foi win_w && q.yd > foi win_w) then
@@ -85,12 +84,12 @@ let algo3D s =
     end
   else ()
 
-let segment_vertices s p =
+let projection_v s p =
   { s with
-    zuo = (foi (win_h / 2)) +. ((((foi ceiling_h) -. step_dist) *. p.d) /. s.xo);
-    zlo = (foi (win_h / 2)) +. ((((foi floor_h) -. step_dist)  *. p.d) /. s.xo);
-    zud = (foi (win_h / 2)) +. ((((foi ceiling_h) -. step_dist) *. p.d) /. s.xd);
-    zld = (foi (win_h / 2)) +. ((((foi floor_h) -. step_dist)  *. p.d) /. s.xd);
+    zuo = (foi (win_h / 2)) +. (((foi ceiling_h) -. p.yeux) *. p.d /. s.xo);
+    zlo = (foi (win_h / 2)) +. (((foi floor_h) -. p.yeux)  *. p.d /. s.xo);
+    zud = (foi (win_h / 2)) +. (((foi ceiling_h) -. p.yeux) *. p.d /. s.xd);
+    zld = (foi (win_h / 2)) +. (((foi floor_h) -. p.yeux)  *. p.d /. s.xd);
     co = (foi win_w) /. 2. -. s.yo *. p.d /. s.xo;
     cd = (foi win_w) /. 2. -. s.yd *. p.d /. s.xd
   }
@@ -100,47 +99,62 @@ let clip3D l p =
     | [] -> acc
     | r::s ->
        let r = fsegment_of_seg r in
-       let a1 = translation_rotation r p in
-       let a = segment_vertices a1 p in
-       let q = projection a p in
-       if (a.xo < 1. && a.xd < 1.)
-        || (q.yo < 0. && q.yd < 0.)
-        || (q.yo > foi win_w && q.yd > foi win_w) then
+       let tr = translation_rotation r p in
+       let pv = projection_v tr p in
+       let ph = projection_h pv p in
+       if (tr.xo < 1. && tr.xd < 1.)
+        || (ph.yo < 0. && ph.yd < 0.)
+        || (ph.yo > foi win_w && ph.yd > foi win_w) then
          rclip acc s
-       else if a.xo < 1. then
-         let seg = {a with
+       else if tr.xo < 1. then
+         let seg = projection_h (projection_v ({tr with
            xo = 1.;
-           yo = (a.yo +. (1. -. a.xo) *. (tan a.angle))} in
+           yo = (tr.yo +. (1. -. tr.xo) *. (tan tr.angle))}) p) p
+         in
          rclip (seg::acc) s
-       else if a.xd < 1. then
-         let seg = {a with
+       else if tr.xd < 1. then
+         let seg = projection_h (projection_v ({tr with
            xd = 1.;
-           yd = (a.yd +. (1. -. a.xd) *. (tan a.angle))} in
+           yd = (tr.yd +. (1. -. tr.xd) *. (tan tr.angle))}) p) p
+         in
          rclip (seg::acc) s
-       else rclip (a::acc) s
-  in rclip [] l  
+       else rclip (ph::acc) s
+  in rclip [] l
 
-let rec bsp_to_list = function
-  | E -> []
-  | N(r,ag,ad) ->
-    List.rev_append [r] (List.rev_append (bsp_to_list ag) (bsp_to_list ad))
+let rec bsp_to_list bsp p =
+  let acc = ref [] in
+  let f s = acc := s::!acc in
+  rev_parse f bsp p;
+  !acc
 
 let rec draw2D taille = function
   | [] -> ()
   | x::s ->
-    let xo, yo, xd, yd = (iof x.xo), (iof x.yo), (iof x.xd), (iof x.yd) in
-    moveto ((xd / taille + xo / taille) / 2) ((yd / taille + yo / taille) / 2);
+    let xo, yo, xd, yd = (iof x.xo) / taille,
+                         (iof x.yo) / taille,
+                         (iof x.xd) / taille,
+                         (iof x.yd) / taille
+    in
+    moveto ((xd + xo) / 2) ((yd + yo) / 2);
     draw_string x.id;
-    draw_segments [|xo / taille, yo / taille, xd / taille, yd / taille|];
+    draw_segments [|xo, yo, xd, yd|];
     draw2D taille s
 
 let rec draw3D = function
-    | [] -> ()
-    | x::s -> fill_poly ([|(iof x.xo, iof x.zlo);
-                           (iof x.xo, iof x.zuo);
-                           (iof x.xd, iof x.zld);
-                           (iof x.xd, iof x.zud)|]);
-              draw3D s
+  | [] -> ()
+  | x::s ->
+      algo3D x;
+      set_color red;
+      draw_poly ([|(iof x.co, iof x.zlo);
+                   (iof x.co, iof x.zuo);
+                   (iof x.cd, iof x.zud);
+                   (iof x.cd, iof x.zld)|]);
+      set_color blue;
+      fill_poly ([|(iof x.co, iof x.zlo);
+                   (iof x.co, iof x.zuo);
+                   (iof x.cd, iof x.zud);
+                   (iof x.cd, iof x.zld)|]);
+      draw3D s
 
 let draw_player taille p =
   set_color blue;
@@ -158,18 +172,18 @@ let draw_player taille p =
   set_color blue
 
 let draw_minimap map player taille =
-  set_line_width 3;
+  set_line_width 2;
   (* contour *)
   set_color blue;
   draw_rect 0 0 ((win_w + taille) / taille) ((win_h + taille) / taille);
   (* fond *)
   set_color magenta;
-  fill_rect 0 0 (win_w / taille) (win_h / taille); 
+  fill_rect 0 0 (win_w / taille) (win_h / taille);
   set_color black;
   set_line_width 1;
   draw_player taille player;
   set_color blue;
-  set_line_width 3;
+  set_line_width 2;
   draw2D 4 map
 
 let display bsp player =
@@ -178,7 +192,10 @@ let display bsp player =
   fill_rect 0 0 win_w (win_h / 2);
   set_color white;
   fill_rect 0 (win_h / 2) win_w win_h;
-  draw_player 1 player;
-  let map = clip2D (bsp_to_list bsp) player in
-  draw_minimap map player 4;
-  draw2D 1 map
+  set_color black;
+  let map3D = clip3D (bsp_to_list bsp player.pos) player in
+  let map2D = List.rev_map fsegment_of_seg (bsp_to_list bsp player.pos) in
+  draw3D map3D;
+  draw_minimap map2D player 4;
+  (* 2D only *)
+  (* draw_player 1 player *)

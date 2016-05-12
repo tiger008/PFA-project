@@ -8,21 +8,22 @@ type t = {
     mutable pos : Point.t;
     mutable pa : int;
     d : float;
-    yeux : int
+    yeux : float
 }
 
 let new_player pos pa ls fov  = {
     pos;
     pa;
     d = ((foi ls) /. 2.) /. dtan (fov / 2);
-    yeux = 0}
+    yeux = 40.
+}
 
 type dir = Left | Right
 
 let rotate d p =
   match d with
-  | Left -> p.pa <- (p.pa + 15) mod 360
-  | Right -> p.pa <- (p.pa - 15) mod 360
+  | Left -> p.pa <- (p.pa + 5) mod 360
+  | Right -> p.pa <- (p.pa - 5) mod 360
 
 type mv = MFwd | MBwd | MLeft | MRight
 

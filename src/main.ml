@@ -23,6 +23,7 @@ let () =
   auto_synchronize false;
   try
     display map player;
+    draw_poly [|(0, 0); (0, 300); (300, 300); (300, 0)|];
     synchronize ();
     while true do
       let s = Graphics.wait_next_event [Graphics.Key_pressed] in

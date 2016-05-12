@@ -56,33 +56,36 @@ let algo3D s =
   let ls = foi win_w in
   let du = (s.zud -. s.zuo) /. (s.cd -. s.co) in
   let dl = (s.zld -. s.zlo) /. (s.cd -. s.co) in
-  let () = if s.co < 0. then
+  Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f) (%.1f, %.1f)@."
+    s.co s.zlo s.zuo s.cd s.zld s.zud du dl;
+  if s.co < 0. then
     begin
-      s.co <- 0.;
       s.zuo <- s.zuo -. (s.co *. du);
-      s.zlo <- s.zlo -. (s.co *. dl)
+      s.zlo <- s.zlo -. (s.co *. dl);
+      s.co <- 0.;
     end
   else if s.co > ls then
     begin
-      s.co <- ls;
       s.zuo <- s.zuo -. ((s.co -. ls) *. du);
-      s.zlo <- s.zlo -. ((s.co -. ls) *. dl)
-    end
-  else ()
-    in
-    if s.cd < 0. then
-        begin
-      s.cd <- 0.;
+      s.zlo <- s.zlo -. ((s.co -. ls) *. dl);
+      s.co <- ls;
+    end;
+  if s.cd < 0. then
+    begin
       s.zud <- s.zud -. (s.cd *. du);
-      s.zld <- s.zld -. (s.cd *. dl)
+      s.zld <- s.zld -. (s.cd *. dl);
+      s.cd <- 0.;
     end
   else if s.cd > ls then
     begin
-      s.cd <- ls;
       s.zud <- s.zud -. ((s.cd -. ls) *. du);
-      s.zld <- s.zld -. ((s.cd -. ls) *. dl)
-    end
-  else ()
+      s.zld <- s.zld -. ((s.cd -. ls) *. dl);
+      s.cd <- ls;
+    end;
+  Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\
+                  ---------------------@."
+    s.co s.zlo s.zuo s.cd s.zld s.zud
+
 
 let projection_v s p =
   { s with
@@ -154,6 +157,7 @@ let rec draw3D = function
                    (iof x.co, iof x.zuo);
                    (iof x.cd, iof x.zud);
                    (iof x.cd, iof x.zld)|]);
+      Printf.printf "(x.co = %f, zlo = %f)\n(x.co = %f, zuo = %f)\n(x.cd = %f, zud = %f)\n(x.cd = %f, zld = %f)\n" x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
       draw3D s
 
 let draw_player taille p =

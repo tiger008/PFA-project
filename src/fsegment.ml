@@ -30,11 +30,10 @@ let new_fsegment xo yo xd yd = {
     co = 0.;
     cd = 0.
 }
-   
 
 let fsegment_of_seg s =
-let (xo, yo, xd, yd) = get_coordonnees s in
-let fs = new_fsegment xo yo xd yd in
-{fs with id = s.id}
+  let (xo, yo, xd, yd) = get_coordonnees s in
+  let fs = new_fsegment xo yo xd yd in
+    {fs with id = s.id}
 
 

@@ -9,7 +9,7 @@ let lstocl s1 s2 =
   let bo = get_position s2.porig s1 in
   let bd = get_position s2.pdest s1 in
   let xo1, yo1 = s1.porig.x, s1.porig.y
-  and xd1, yd1 = s2.pdest.x, s2.pdest.y
+  and xd1, yd1 = s1.pdest.x, s1.pdest.y
   and xo2, yo2 = s2.porig.x, s2.porig.y
   and xd2, yd2 = s2.pdest.x, s2.pdest.y
   in
@@ -27,12 +27,13 @@ let detect_collision s bsp =
     match bsp with
     | E -> false
     | N(r,ag, ad) ->
-       let a = get_position s.porig r in
-       let c = intersect s r in
+       let xo = get_position s.porig r in
+       let xd = get_position s.pdest r in
+       let c  = intersect s r in
        if c then true
        else
-         match a with
-         | C -> false
-         | L -> rdc ag
-         | R -> rdc ad
+         match xo, xd with
+         | L, L | L, C | C, L -> rdc ag (* o---d|| ou o---|d| ou d---|o| *)
+         | R, R | R, C | C, R -> rdc ad (* ||o---d ou |d|---o ou |o|---d *)
+         | _ -> rdc ag && rdc ad
   in rdc bsp

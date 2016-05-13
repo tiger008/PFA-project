@@ -17,7 +17,8 @@ let calc_angle s =
   atan2 (s.yd -. s.yo) (s.xd -. s.xo)
 
 let translation_rotation s p =
-  let ns = rotation (translation s (new_point (-p.pos.x) (-p.pos.y))) (-p.pa) in
+  let pp = new_point (-p.pos.x) (-p.pos.y) in
+  let ns = rotation (translation s pp) (-p.pa) in
   let ns = {ns with angle = calc_angle ns} in
   if (ns.xo < 1. && ns.xd < 1.) then None
   else if ns.xo < 1. then
@@ -35,7 +36,10 @@ let translation_rotation_inverse s p =
   {ns with angle = calc_angle ns}
 
 let projection_v s p =
-  { s with
+  (* DEBUG *)
+    Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@."
+    s.co s.zlo s.zuo s.cd s.zld s.zud;
+  let s = { s with
     zuo = win_h /. 2. +. (ceiling_h -. p.yeux) *. p.d /. s.xo;
     zlo = win_h /. 2. +. (floor_h -. p.yeux)  *. p.d /. s.xo;
     zud = win_h /. 2. +. (ceiling_h -. p.yeux) *. p.d /. s.xd;
@@ -43,6 +47,12 @@ let projection_v s p =
     co = win_w /. 2. -. s.yo *. p.d /. s.xo;
     cd = win_w /. 2. -. s.yd *. p.d /. s.xd
   }
+  in
+  (* DEBUG *)
+    Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@."
+      s.co s.zlo s.zuo s.cd s.zld s.zud;
+  s
+    
 
 let projection_h s p =
   let xo = p.d
@@ -74,13 +84,14 @@ let clip2D r p =
 
 let algo3D s =
   let ls = win_w in
+  let ymax = 16383. in
+  let ymin = -.16384. in
   let du = (s.zud -. s.zuo) /. (s.cd -. s.co) in
   let dl = (s.zld -. s.zlo) /. (s.cd -. s.co) in
-  (*
-     (* DEBUG *)
-    Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f) (%.1f, %.1f)@."
-    s.co s.zlo s.zuo s.cd s.zld s.zud du dl;
-  *)
+  
+    (*  (\* DEBUG *\) *)
+    (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f) (%.1f, %.1f)@." *)
+    (* s.co s.zlo s.zuo s.cd s.zld s.zud du dl; *)
   if s.co < 0. then
     begin
       s.zuo <- s.zuo -. (s.co *. du);
@@ -104,23 +115,29 @@ let algo3D s =
       s.zud <- s.zud -. ((s.cd -. ls) *. du);
       s.zld <- s.zld -. ((s.cd -. ls) *. dl);
       s.cd <- ls;
-    end
-(*
-  (* DEBUG *)
-  ;
+    end;
+  if s.zlo < ymin then s.zlo <- ymin;
+  if s.zuo > ymax then s.zuo <- ymax;
+  if s.zld < ymin then s.zld <- ymin;
+  if s.zud > ymax then s.zud <- ymax;
+  if s.zlo = ymin && s.zuo = ymax && s.co < s.cd then s.co <- 0.;
+  if s.zlo = ymin && s.zuo = ymax && s.co > s.cd then s.co <- 800.;
+  if s.zld = ymin && s.zud = ymax && s.co < s.cd then s.cd <- 0.;
+  if s.zld = ymin && s.zud = ymax && s.co < s.cd then s.cd <- 800.;
+  (* (\* DEBUG *\) *)
+  (* ; *)
   Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\
   ---------------------@."
   s.co s.zlo s.zuo s.cd s.zld s.zud
-*)
 
 
 let draw3D x =
   algo3D x;
   let co, zlo, zuo = iof x.co, iof x.zlo, iof x.zuo in
   let cd, zld, zud = iof x.cd, iof x.zld, iof x.zud in
-  Format.eprintf "(%d, %d, %d) (%d, %d, %d)@." co zlo zuo cd zld zud;
+  (* Format.eprintf "(%d, %d, %d) (%d, %d, %d)@." co zlo zuo cd zld zud; *)
   let (co, cd, zlo, zuo, zud, zld) =
-    ((co)/ scale,
+    ((co) / scale,
      (cd) / scale,
      (zlo) / scale,
      (zuo) / scale,
@@ -133,10 +150,10 @@ let draw3D x =
                (cd, zud);
                (cd, zld)|]);
   set_color red;
-    (*
-     (* DEBUG *)
-      Format.eprintf " %s (ci = %f, ce = %f)\n@." x.id x.ci x.ce;
-    *)
+  (*
+      (* DEBUG *)
+    Format.eprintf " %s (ci = %f, ce = %f)\n@." x.id x.ci x.ce;
+  *)
   if x.ci > 0. && x.ce = 1. then
     draw_segments ([|(co, zlo, cd, zld);
                      (co, zuo, cd, zud);
@@ -149,6 +166,7 @@ let draw3D x =
     draw_segments ([|(co, zlo, cd, zld);
                      (co, zuo, cd, zud)|])
   else
+    Format.eprintf "(%d, %d) (%d, %d) (%d, %d) (%d, %d) @." co zlo co zuo cd zud cd zld;
     draw_poly ([|(co, zlo);
                  (co, zuo);
                  (cd, zud);
@@ -159,12 +177,11 @@ let draw3D x =
   ^"\n(x.cd = %f, zud = %f)\n(x.cd = %f, zld = %f)\n"
   x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
 *)
-
 let clip3D p r =
   let r = fsegment_of_seg r in
   let xo, yo = iof r.xo, iof r.yo in
   let xd, yd = iof r.xd, iof r.yd in
-  Format.eprintf "(%d, %d) (%d, %d)@." xo yo xd yd;
+  (* Format.eprintf "(%d, %d) (%d, %d)@." xo yo xd yd; *)
   
   match translation_rotation r p with
   | None -> ()
@@ -252,7 +269,7 @@ let display bsp player =
       fill_rect 0 (win_h / 2) win_w win_h;
       set_color black;
       rev_parse (clip3D player) bsp player.pos;
-      Format.eprintf "-----------------@.";
+      (* Format.eprintf "-----------------@."; *)
   
       if minimap then draw_minimap bsp player;
       if get_hov () = ceiling_h / 2 && get_perspective () = RPG then

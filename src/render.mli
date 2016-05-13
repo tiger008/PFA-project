@@ -1,1 +1,1 @@
-val display : Bsp.t -> Player.t -> unit
+val display : Bsp.t -> Player.t -> Sun.t -> Moon.t -> unit

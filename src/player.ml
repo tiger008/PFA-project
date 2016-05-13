@@ -26,7 +26,8 @@ type dir = Left | Right
 let rotate d p =
   match d with
   | Left -> p.pa <- (p.pa + 5) mod 360
-  | Right -> p.pa <- (p.pa - 5) mod 360
+  | Right -> p.pa <- (p.pa - 5) mod 360;
+             if p.pa < 0 then p.pa <- 345
 
 type mv = MFwd | MBwd | MLeft | MRight
 

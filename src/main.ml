@@ -8,6 +8,8 @@ open Bsp
 open Trigo
 open Sys
 open Render
+open Sun
+open Moon
 
 let rec seglist il acc =
     match il with
@@ -22,6 +24,8 @@ let () =
   let ((x, y, a), sl) = read_lab (open_in argv.(1))  in
   let player = new_player (new_point x y) a win_w fov in
   let map = build_bsp (seglist sl []) in
+  let sun = new_sun 0 (50 + player.pos.y/win_h) in
+  let moon = new_moon win_w (40 + player.pos.y/win_h) in
   (*
     (* DEBUG *)
     Printf.printf "%s\n" (string_of_bsp map);
@@ -29,7 +33,7 @@ let () =
   open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try
-    display map player;
+    display map player sun moon;
     synchronize ();
     while true do
       let (fw, bw, left, right, rleft, rright) = touche (get_lang ()) in
@@ -39,8 +43,13 @@ let () =
         | _ when s.key = bw -> move MBwd player map
         | _ when s.key = left-> move MLeft player map
         | _ when s.key = right -> move MRight player map
-        | _ when s.key = rleft -> rotate Left player
-        | _ when s.key = rright -> rotate Right player
+        | _ when s.key = rleft -> rotate Left player;
+                                  sun.spos <- sun.spos + 5 + fov;
+                                  moon.mpos <- moon.mpos -5 - fov
+        | _ when s.key = rright -> rotate Right player;
+                                   Format.eprintf "%d\n@." player.pa;
+                                   sun.spos <- sun.spos - 5 - fov;
+                                   moon.mpos <- moon.mpos + 5 + fov
         | 'l' -> change_lang (get_lang ())
         | 'c' -> change_mode (get_mode ())
         | 'p' -> increment_hov (); change_yeux player (get_hov ())
@@ -51,7 +60,7 @@ let () =
         | _ -> ()
       in
       clear_graph ();
-      display map player;
+      display map player sun moon;
       synchronize ();
     done;
   with Exit -> close_graph (); exit (0)

@@ -16,9 +16,11 @@ LIBOPTS = $(LIBS:.cma=.cmxa)
 
 EXEC = bsp
 
-OBJS = 	point.cmo segment.cmo fsegment.cmo trigo.cmo options.cmo \
+OBJS = 	point.cmo segment.cmo fsegment.cmo \
+	trigo.cmo options.cmo \
 	bsp.cmo physic.cmo \
-	player.cmo parse_lab.cmo draw.cmo render.cmo main.cmo
+	player.cmo parse_lab.cmo \
+	draw.cmo sun.cmo moon.cmo render.cmo main.cmo
 
 OPTOBJS = $(OBJS:.cmo=.cmx)
 FILESMLI = $(OBJS:.cmo=.mli)

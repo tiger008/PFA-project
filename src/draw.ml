@@ -4,6 +4,8 @@ open Player
 open Bsp
 open Graphics
 open Point
+open Sun
+open Moon
 
 let scalemap = ref scale
 
@@ -63,7 +65,6 @@ let draw3D x =
   x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
  *)
 
-
 let draw_player2D taille p =
   set_color blue;
   let px = p.pos.x / taille in
@@ -116,24 +117,24 @@ let draw_minimap map player =
   parse f map player.pos;
   scalemap := scale
 
-let draw_sun p landsky_inter =
+let draw_sun sun player landsky_inter =
   set_color yellow;
-  let sun_pos = 50 + p.pos.y/win_h in
-  let orientation = ref p.pa in
-  if p.pa < 0 then
+  if player.pa = 90 then
     begin
-      orientation := -p.pa
+      sun.spos <- 0;
+    end
+  else if player.pa = 90+fov then
+    begin
+      sun.spos <- win_w
     end;
-  if sun_pos > 0 then
-    fill_circle ((p.pa * !orientation)/win_w+win_w/3) (landsky_inter+win_h/4) (sun_pos)
+  if sun.ssize > 0 then
+    fill_circle (sun.spos) (landsky_inter+win_h/4) (sun.ssize)
 
-let draw_moon p landsky_inter =
+let draw_moon moon player landsky_inter =
   set_color (rgb 192 192 192);
-  let moon_pos = 35 + p.pos.y/win_h in
-  let orientation = ref p.pa in
-  if p.pa < 0 then
+  if player.pa = 90 then
     begin
-      orientation := -p.pa
+      moon.mpos <- win_w
     end;
-  if moon_pos > 0 then
-    fill_circle ((p.pa * !orientation)/win_w+win_w-200) (landsky_inter+win_h/4) (moon_pos)
+  if moon.msize > 0 then
+    fill_circle (moon.mpos) (landsky_inter+win_h/4) (moon.msize)

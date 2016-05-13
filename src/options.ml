@@ -56,7 +56,7 @@ let increment_hov () =
 let decrement_hov () =
   hov := !hov - 1
 
-                  let set_time = function
+let set_time = function
   | "Day" -> time := Day
   | "Night" -> time := Night
   |  _ -> ()

@@ -50,8 +50,8 @@ let projection_v s p =
           }
   in
   (* DEBUG *)
-  Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@."
-                 s.co s.zlo s.zuo s.cd s.zld s.zud;
+  (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@." *)
+  (*                s.co s.zlo s.zuo s.cd s.zld s.zud; *)
   s
 
 let projection_h s p =
@@ -109,15 +109,15 @@ let algo3D s =
   if s.zuo > ymax then s.zuo <- ymax;
   if s.zld < ymin then s.zld <- ymin;
   if s.zud > ymax then s.zud <- ymax;
-  if s.zlo = ymin && s.zuo = ymax && s.co < s.cd then s.co <- 0.;
-  if s.zlo = ymin && s.zuo = ymax && s.co > s.cd then s.co <- 800.;
-  if s.zld = ymin && s.zud = ymax && s.co < s.cd then s.cd <- 0.;
-  if s.zld = ymin && s.zud = ymax && s.co < s.cd then s.cd <- 800.;
+  if s.zlo = ymin && s.zuo = ymax && s.co < s.cd then s.co <- 0.
+  else if s.zlo = ymin && s.zuo = ymax && s.co > s.cd then s.co <- 800.;
+  if s.zld = ymin && s.zud = ymax && s.cd < s.co then s.cd <- 0.
+  else if s.zld = ymin && s.zud = ymax && s.cd > s.co then s.cd <- 800.
   (* (\* DEBUG *\) *)
   (* ; *)
-  Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\
-                  ---------------------@."
-                 s.co s.zlo s.zuo s.cd s.zld s.zud
+  (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\ *)
+  (*                 ---------------------@." *)
+  (*                s.co s.zlo s.zuo s.cd s.zld s.zud *)
                  
 let clip3D p r =
   let r = fsegment_of_seg r in
@@ -134,7 +134,7 @@ let clip3D p r =
         algo3D pv;
         draw3D pv
 
-let display bsp player =
+let display bsp player sun moon =
   let win_w = iof win_w in
   let win_h = truncate win_h in
   let ceiling_h = iof ceiling_h in
@@ -159,13 +159,13 @@ let display bsp player =
             fill_rect 0 0 win_w win_h
           else
             fill_rect 0 landsky_inter win_w win_h;
-          draw_sun player landsky_inter;
+          draw_sun sun player landsky_inter;
         end
       else if get_time () = Night then
         begin
           set_color (rgb 47 79 79);
           fill_rect 0 landsky_inter win_w win_h;
-          draw_moon player landsky_inter;
+          draw_moon moon player landsky_inter;
         end;
       set_color (rgb 102 51 0);
       if landsky_inter > 0 then

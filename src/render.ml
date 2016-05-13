@@ -21,6 +21,16 @@ let translation_rotation_inverse s p =
   let ns = translation (rotation s p.pa) p.pos in
   {ns with angle = calc_angle ns}
 
+let projection_v s p =
+  { s with
+    zuo = (foi (win_h / 2)) +. (((foi ceiling_h) -. p.yeux) *. p.d /. s.xo);
+    zlo = (foi (win_h / 2)) +. (((foi floor_h) -. p.yeux)  *. p.d /. s.xo);
+    zud = (foi (win_h / 2)) +. (((foi ceiling_h) -. p.yeux) *. p.d /. s.xd);
+    zld = (foi (win_h / 2)) +. (((foi floor_h) -. p.yeux)  *. p.d /. s.xd);
+    co = (foi win_w) /. 2. -. s.yo *. p.d /. s.xo;
+    cd = (foi win_w) /. 2. -. s.yd *. p.d /. s.xd
+  }
+
 let projection_h s p =
     {s with
     xo = p.d;
@@ -123,16 +133,6 @@ let algo3D s =
 *)
 
 
-let projection_v s p =
-  { s with
-    zuo = (foi (win_h / 2)) +. (((foi ceiling_h) -. p.yeux) *. p.d /. s.xo);
-    zlo = (foi (win_h / 2)) +. (((foi floor_h) -. p.yeux)  *. p.d /. s.xo);
-    zud = (foi (win_h / 2)) +. (((foi ceiling_h) -. p.yeux) *. p.d /. s.xd);
-    zld = (foi (win_h / 2)) +. (((foi floor_h) -. p.yeux)  *. p.d /. s.xd);
-    co = (foi win_w) /. 2. -. s.yo *. p.d /. s.xo;
-    cd = (foi win_w) /. 2. -. s.yd *. p.d /. s.xd
-  }
-
 let draw3D x =
   let taille = scale in
     algo3D x;
@@ -218,12 +218,6 @@ let clip3D r p =
         draw3D r
       end
     else draw3D ph
-
-let rec bsp_to_list bsp p =
-  let acc = ref [] in
-  let f s = acc := s::!acc in
-  rev_parse f bsp p;
-  !acc
 
 let draw_player taille p =
   set_color blue;

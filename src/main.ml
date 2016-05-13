@@ -43,8 +43,10 @@ let () =
         | _ when s.key = rright -> rotate Right player
         | 'l' -> change_lang (get_lang ())
         | 'c' -> change_mode (get_mode ())
-        | 'p' -> increment_hov (); change_yeux player (get_hov ());
+        | 'p' -> increment_hov (); change_yeux player (get_hov ())
         | 'o' -> decrement_hov (); change_yeux player (get_hov ())
+        | 't' -> change_time (get_time ())
+        | 'v' -> change_perspective (get_perspective ())
         | '\027' -> raise Exit
         | _ -> ()
       in

@@ -1,12 +1,16 @@
 type tmode = TwoD | ThreeD
 type tlang = FR | US
-
+type ttime = Day | Night
+type tperspective = FPS | RPG
+                    
 let usage = "usage: ./bsp file.lab"
 let file = ref ""
 
 let mode = ref TwoD
 let lang = ref FR
-
+let time = ref Day
+let perspective = ref FPS
+               
 let win_w = ref 800
 let win_h = ref 800
 
@@ -51,6 +55,29 @@ let increment_hov () =
 
 let decrement_hov () =
   hov := !hov - 1
+
+                  let set_time = function
+  | "Day" -> time := Day
+  | "Night" -> time := Night
+  |  _ -> ()
+
+let change_time = function
+  | Day -> time := Night
+  | Night -> time := Day
+  | _ -> ()
+    
+let get_time () = !time
+
+let set_perspective = function
+  | "FPS" -> perspective := FPS
+  | "RPG" -> perspective := RPG
+  | _ -> ()
+                              
+let change_perspective = function
+  | FPS -> perspective := RPG
+  | RPG -> perspective := FPS
+                            
+let get_perspective () = !perspective
   
 let specs =
   [ "-mode", Arg.String set_mode, "<2D | 3D> 2D or 3D display";
@@ -65,6 +92,8 @@ let specs =
     "-xmin", Arg.Set_int xmin, " set minimum distance of display";
     "-debug", Arg.Set debug, " debugging 2D rendering";
     "-debugbsp", Arg.Set debug_bsp, " debugging bsp";
+    "-time", Arg.String set_time, " <Day | Night> Day or Night display";
+    "-persp", Arg.String set_perspective, " <FPS | RPS> FPS or RPS perspective"
   ]
 
 let alspecs = Arg.align specs

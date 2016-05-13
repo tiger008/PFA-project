@@ -1,11 +1,19 @@
 type tmode = TwoD | ThreeD
 type tlang = FR | US
-
+type ttime = Day | Night
+type tperspective = FPS | RPG
+                    
 val change_mode : tmode -> unit
 val get_mode : unit -> tmode
 
 val change_lang : tlang -> unit
 val get_lang : unit -> tlang
+
+val change_time : ttime -> unit
+val get_time : unit -> ttime
+
+val change_perspective : tperspective -> unit
+val get_perspective : unit -> tperspective
 
 val increment_hov : unit -> unit
 val decrement_hov : unit -> unit

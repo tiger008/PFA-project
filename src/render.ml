@@ -7,7 +7,6 @@ open Bsp
 open Fsegment
 open Options
 
-
 let scalemap = ref scale
 
 let calc_angle s =
@@ -219,7 +218,7 @@ let clip3D r p =
       end
     else draw3D ph
 
-let draw_player taille p =
+let draw_player2D taille p =
   set_color blue;
   let px = p.pos.x / taille in
   let py = p.pos.y / taille in
@@ -233,6 +232,19 @@ let draw_player taille p =
     i := !i - etal;
   done;
   set_color blue
+
+let draw_player3D p =
+  (* head *)
+  fill_circle (win_w/2) (iof p.yeux+100) 20;
+  (* body *)
+  draw_segments [|(win_w/2,(iof p.yeux+100)/3,win_w/2, (iof p.yeux)+100)|];
+  (* hands *)
+  draw_segments ([|(win_w/2-50,(((iof p.yeux+100)/3) + (iof p.yeux)+100)/2,win_w/2+50,(((iof p.yeux+100)/3) + (iof p.yeux)+100)/2)|]);
+  (* legs *)
+  draw_poly ([|(win_w/2-20, 1);
+               (win_w/2, ((iof p.yeux)+100)/3);
+               (win_w/2+20, 1);
+               (win_w/2, ((iof p.yeux)+100)/3)|]) 
 
 let draw_minimap map player =
   let taille = scale * 4 in
@@ -248,7 +260,7 @@ let draw_minimap map player =
      && player.pos.y >=0
      && player.pos.x <= win_w
      && player.pos.y <= win_h then
-    draw_player taille player;
+    draw_player2D taille player;
   set_color blue;
   set_line_width 2;
   scalemap := scale * 4;
@@ -263,7 +275,7 @@ let display bsp player =
       set_color cyan;
       fill_rect 0 0 win_w win_h;
       set_color black;
-      draw_player scale player;
+      draw_player2D scale player;
       let f s = clip2D s player in
       rev_parse f bsp player.pos;
     end
@@ -271,7 +283,15 @@ let display bsp player =
     begin
       set_color (rgb 102 51 0);
       fill_rect 0 0 win_w (win_h / 2);
-      set_color (rgb 51 204 255);
+      if get_time () = Day then
+        begin
+          set_color (rgb 51 204 255);
+        end
+      else if get_time () = Night then
+        begin
+          set_color (rgb 47 79 79);
+        end
+      else ();
       fill_rect 0 (win_h / 2) win_w win_h;
       set_color black;
       let f s = clip3D s player in
@@ -280,4 +300,7 @@ let display bsp player =
         begin
           draw_minimap bsp player
         end;
+      if get_hov () = ceiling_h/2 && get_perspective () = RPG then
+        draw_player3D player
+      else ()
     end

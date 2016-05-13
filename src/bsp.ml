@@ -10,9 +10,8 @@ let parse f bsp p =
     | N(r,sl,sr) ->
        let pos = get_position p r in
        match pos with
-       | C -> f r; ()
        | L -> rparse sl; f r; rparse sr
-       | R -> rparse sr; f r; rparse sl
+       | R | C -> rparse sr; f r; rparse sl
   in rparse bsp
 
 let rev_parse f bsp p =
@@ -20,13 +19,13 @@ let rev_parse f bsp p =
     match bsp with
     | E -> ()
     | N(r,sl,sr) ->
-       let pos = get_position p r in
-       match pos with
-       | C -> f r; ()
-       | L -> rrevparse sr; f r; rrevparse sl
-       | R -> rrevparse sl; f r; rrevparse sr
+      let pos = get_position p r in
+      
+      match pos with
+      | L -> rrevparse sr; f r; rrevparse sl
+      | R | C -> rrevparse sl; f r; rrevparse sr
   in rrevparse bsp
-
+  
 let iter f bsp =
   let rec riter bsp =
     match bsp with

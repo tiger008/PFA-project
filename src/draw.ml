@@ -11,10 +11,10 @@ let scalemap = ref scale
 
 let draw2D x =
   let taille = !scalemap in
-  let xo, yo, xd, yd = (iof x.xo) / taille,
-                       (iof x.yo) / taille,
-                       (iof x.xd) / taille,
-                       (iof x.yd) / taille
+  let xo, yo, xd, yd = ((iof x.xo) * win_w / 800) / taille,
+                       ((iof x.yo) * win_h / 800) / taille,
+                       ((iof x.xd) * win_w / 800) / taille,
+                       ((iof x.yd) * win_h / 800) / taille
   in
   moveto ((xd + xo) / 2) ((yd + yo) / 2);
   draw_string x.id;
@@ -67,8 +67,8 @@ let draw3D x =
 
 let draw_player2D taille p =
   set_color blue;
-  let px = p.pos.x / taille in
-  let py = p.pos.y / taille in
+  let px = p.pos.x * win_w / 800 / taille in
+  let py = p.pos.y * win_h / 800 / taille in
   fill_circle px py (10 / taille);
   set_color yellow;
   let i = ref (140 / taille) in

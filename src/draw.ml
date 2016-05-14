@@ -102,7 +102,7 @@ let draw_minimap map player =
   set_color black;
   draw_rect 0 0 ((win_w + taille) / taille) ((win_h + taille) / taille);
   (* fond *)
-  set_color cyan;
+  set_color (rgb 255 210 132);
   fill_rect 0 0 (win_w / taille) (win_h / taille);
   set_line_width 1;
   if player.pos.x >= 0
@@ -110,7 +110,7 @@ let draw_minimap map player =
      && player.pos.x <= win_w
      && player.pos.y <= win_h then
     draw_player2D taille player;
-  set_color blue;
+  set_color (rgb 102 51 0);
   set_line_width 2;
   scalemap := scale * 4;
   let f s = draw2D (fsegment_of_seg s) in

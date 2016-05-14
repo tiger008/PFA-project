@@ -11,7 +11,7 @@ clean:
 	make clean -C src/
 
 fclean:
-	rm $(NAME)
 	make clean -C src/
+	rm -f $(NAME)
 
 re: fclean all

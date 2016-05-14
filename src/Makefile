@@ -14,13 +14,22 @@ LIBS = str.cma graphics.cma
 # bigarray.cma sdl.cma
 LIBOPTS = $(LIBS:.cma=.cmxa)
 
-EXEC = bsp
+EXEC = projet_pfa
 
-OBJS = 	point.cmo segment.cmo fsegment.cmo \
-	trigo.cmo options.cmo \
-	bsp.cmo physic.cmo \
-	player.cmo parse_lab.cmo \
-	draw.cmo sun.cmo moon.cmo render.cmo main.cmo
+OBJS = point.cmo \
+	segment.cmo \
+	fsegment.cmo \
+	trigo.cmo \
+	options.cmo \
+	bsp.cmo \
+	physic.cmo \
+	player.cmo \
+	parse_lab.cmo \
+	draw.cmo \
+	sun.cmo \
+	moon.cmo \
+	render.cmo \
+	main.cmo
 
 OPTOBJS = $(OBJS:.cmo=.cmx)
 FILESMLI = $(OBJS:.cmo=.mli)

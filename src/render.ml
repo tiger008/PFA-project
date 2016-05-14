@@ -37,14 +37,15 @@ let translation_rotation_inverse s p =
   {ns with angle = calc_angle ns}
 
 let projection_v s p =
+  let yeux = foi (get_hov ()) in
   (* DEBUG *)
   Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@."
                  s.co s.zlo s.zuo s.cd s.zld s.zud;
   let s = { s with
-            zuo = win_h /. 2. +. (ceiling_h -. p.yeux) *. p.d /. s.xo;
-            zlo = win_h /. 2. +. (floor_h -. p.yeux)  *. p.d /. s.xo;
-            zud = win_h /. 2. +. (ceiling_h -. p.yeux) *. p.d /. s.xd;
-            zld = win_h /. 2. +. (floor_h -. p.yeux)  *. p.d /. s.xd;
+            zuo = win_h /. 2. +. (ceiling_h -. yeux) *. p.d /. s.xo;
+            zlo = win_h /. 2. +. (floor_h -. yeux)  *. p.d /. s.xo;
+            zud = win_h /. 2. +. (ceiling_h -. yeux) *. p.d /. s.xd;
+            zld = win_h /. 2. +. (floor_h -. yeux)  *. p.d /. s.xd;
             co = win_w /. 2. -. s.yo *. p.d /. s.xo;
             cd = win_w /. 2. -. s.yd *. p.d /. s.xd
           }

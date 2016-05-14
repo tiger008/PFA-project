@@ -41,24 +41,30 @@ let () =
       let _ = match s.key with
         | _ when s.key = fw -> move MFwd player map
         | _ when s.key = bw -> move MBwd player map
-        | _ when s.key = left-> move MLeft player map
-        | _ when s.key = right -> move MRight player map
+        | _ when s.key = left-> move MLeft player map;
+        (*sun.spos <- sun.spos + sun.smove_s*)                 
+        | _ when s.key = right -> move MRight player map;
+        (*sun.spos <- sun.spos - sun.smove_s*)
         | _ when s.key = rleft -> rotate Left player;
-                                  sun.spos <- sun.spos + 5 + fov;
-                                  moon.mpos <- moon.mpos -5 - fov
+                                  Format.eprintf "%d\n@." player.pa;
+                                  sun.spos <- sun.spos + sun.smove_r;
+                                  moon.mpos <- moon.mpos - (get_rs()) - 60
         | _ when s.key = rright -> rotate Right player;
                                    Format.eprintf "%d\n@." player.pa;
-                                   sun.spos <- sun.spos - 5 - fov;
-                                   moon.mpos <- moon.mpos + 5 + fov
+                                   sun.spos <- sun.spos - sun.smove_r;
+                                   moon.mpos <- moon.mpos + (get_rs()) + 60
         | 'l' -> change_lang (get_lang ())
         | 'c' -> change_mode (get_mode ())
-        | 'p' -> increment_hov (); change_yeux player (get_hov ())
-        | 'o' -> decrement_hov (); change_yeux player (get_hov ())
+        | 'p' -> increment_hov ()
+        | 'o' -> decrement_hov ()
+        | 'i' -> increment_rs (); change_smove_r sun
+        | 'u' -> decrement_rs (); change_smove_r sun
         | 't' -> change_time (get_time ())
         | 'v' -> change_perspective (get_perspective ())
         | '\027' -> raise Exit
-        | _ -> ()
+        | _ -> ()      
       in
+      Format.eprintf "%d\n@." player.pos.x;
       clear_graph ();
       display map player sun moon;
       synchronize ();

@@ -16,6 +16,7 @@ let win_h = ref 800
 
 let fov = ref 60
 let hov = ref 1
+let rs = ref 10
 
 let step_dist = ref 10
 
@@ -56,6 +57,12 @@ let increment_hov () =
 let decrement_hov () =
   hov := !hov - 1
 
+let increment_rs () =
+  rs := !rs + 10
+                  
+let decrement_rs () =
+  rs := !rs - 10
+
 let set_time = function
   | "Day" -> time := Day
   | "Night" -> time := Night
@@ -84,6 +91,7 @@ let specs =
     "-lang", Arg.String set_lang, " <FR | US> FR or US lang";
     "-fov", Arg.Set_int fov, " field of vision (angle de vision)";
     "-hov", Arg.Set_int hov, " height of vision (hauteur de vision)";
+    "-rs", Arg.Set_int rs, " rotation speed";
     "-dims", Arg.Tuple [Arg.Set_int win_w; Arg.Set_int win_h], 
     " set the dimensions of the graph";
     "-scale", Arg.Set_int scale, " scale of the 2D map";
@@ -122,6 +130,7 @@ let wall_h = ceiling_h - floor_h
 
 let fov = !fov
 let get_hov () = !hov * ceiling_h / 2
+let get_rs () = !rs
 
 let step_dist = float !step_dist
 

@@ -1,13 +1,10 @@
 type t = {
   mutable pos : Point.t;
   mutable pa : int;
-  d : float;
-  mutable yeux : float
+  d : float
 }
 
 val new_player : Point.t -> int -> int -> int -> t
-
-val change_yeux : t -> int -> unit
 
 type dir = Left | Right
 

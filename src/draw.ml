@@ -81,7 +81,7 @@ let draw_player2D taille p =
   set_color blue
             
 let draw_player3D p =
-  let yeux = iof p.yeux in
+  let yeux = get_hov() in
   (* head *)
   fill_circle (win_w / 2) (yeux + 100) 20;
   (* body *)
@@ -119,11 +119,12 @@ let draw_minimap map player =
 
 let draw_sun sun player landsky_inter =
   set_color yellow;
-  if player.pa = 90 then
+  let rs = get_rs() in
+  if player.pa = 90 (*&& player.pos.x = win_w/2*) then
     begin
       sun.spos <- 0;
     end
-  else if player.pa = 90+fov then
+  else if player.pa mod 360 = 90 + (win_w / rs) + 20 (*&& player.pos.x = win_w/2*) then
     begin
       sun.spos <- win_w
     end;
@@ -134,7 +135,11 @@ let draw_moon moon player landsky_inter =
   set_color (rgb 192 192 192);
   if player.pa = 90 then
     begin
-      moon.mpos <- win_w
+      moon.mpos <- win_w;
+    end;
+  if player.pa = 90+60 then
+    begin
+      moon.mpos <- 0
     end;
   if moon.msize > 0 then
     fill_circle (moon.mpos) (landsky_inter+win_h/4) (moon.msize)

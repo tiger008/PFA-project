@@ -17,6 +17,9 @@ val get_perspective : unit -> tperspective
 
 val increment_hov : unit -> unit
 val decrement_hov : unit -> unit
+
+val increment_rs : unit -> unit
+val decrement_rs : unit -> unit
                          
 val cin : in_channel
 
@@ -29,6 +32,7 @@ val wall_h : int
 
 val fov : int
 val get_hov : unit -> int
+val get_rs : unit -> int
             
 val step_dist : float
 

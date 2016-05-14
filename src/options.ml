@@ -71,7 +71,6 @@ let set_time = function
 let change_time = function
   | Day -> time := Night
   | Night -> time := Day
-  | _ -> ()
     
 let get_time () = !time
 

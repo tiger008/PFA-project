@@ -122,8 +122,8 @@ let algo3D s =
                  
 let clip3D p r =
   let r = fsegment_of_seg r in
-  let xo, yo = iof r.xo, iof r.yo in
-  let xd, yd = iof r.xd, iof r.yd in
+  (* let xo, yo = iof r.xo, iof r.yo in *)
+  (* let xd, yd = iof r.xd, iof r.yd in *)
   (* Format.eprintf "(%d, %d) (%d, %d)@." xo yo xd yd; *)
   match translation_rotation r p with
   | None -> ()

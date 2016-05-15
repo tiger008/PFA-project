@@ -1,4 +1,5 @@
 **<h1 align="center">Doom motor in OCaml</h1>**
+***
 <p align="center"><img height=500px src="./Doom.jpg"/></p>
 ***
 ## Install
@@ -61,8 +62,7 @@
 
   - Player can pass through some corner
   - When player and specifics walls are very closed with a certain angle, the wall disappear. But player cannot cross.
-  
-***
+
 
 ## Thanks
 

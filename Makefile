@@ -6,6 +6,7 @@ all:
 
 opt:
 	make opt -C src/
+	mv src/$(NAME) ./
 
 clean:
 	make clean -C src/

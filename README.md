@@ -29,7 +29,7 @@
   - **`a`** : _move left_
   - **`q`** : _rotate left_
 
->_other keys are unchange_
+>_other keys are unchanged_
   
 ## Options
 
@@ -55,12 +55,12 @@
 
 ## Collision Solution
 
-  Collisions are managed by calculating the new position of the player and search for intersection between walls (segments) and player moving (speed vector).
+  Collisions are managed first by calculating the player's new position and then by searching the existence of an intersection between the walls (segments) and the player's movement (speed vector).
   
 ## Bugs
 
-  - Player can pass through some corner.
-  - When player and specifics walls are very closed with a certain angle, the wall disappear. But player cannot cross.
+  - The player can pass through some corners.
+  - When the player and some walls are very close, with a certain angle, to each other, the wall disappears. But the player cannot cross.
 
 
 ## Thanks

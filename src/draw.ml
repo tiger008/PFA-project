@@ -6,18 +6,20 @@ open Graphics
 open Point
 open Sun
 open Moon
-
-let scalemap = ref scale
-
-let draw2D x =
+open Trigo
+open Physic
+       
+let scalemap = ref scale                 
+                   
+let draw2D x p =
   let taille = !scalemap in
   let xo, yo, xd, yd = ((iof x.xo) * win_w / 800) / taille,
                        ((iof x.yo) * win_h / 800) / taille,
                        ((iof x.xd) * win_w / 800) / taille,
                        ((iof x.yd) * win_h / 800) / taille
   in
-  moveto ((xd + xo) / 2) ((yd + yo) / 2);
-  draw_string x.id;
+  (* moveto ((xd + xo) / 2) ((yd + yo) / 2); *)
+  (* draw_string x.id; *)
   draw_segments [|xo, yo, xd, yd|]
 
 let draw3D x =
@@ -65,6 +67,21 @@ let draw3D x =
   x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
  *)
 
+let draw_miniplayer2D taille p =
+  set_color black;
+  let px = win_w / taille / 2 in
+  fill_circle px 0 (10 / taille);
+  let i = ref (140 / taille) in
+  let etal = !i / 10 in
+  let fov = fov / 2 in
+  begin
+    while !i > 10 do
+      draw_arc px 0 !i !i (90 - fov) (90 + fov);
+      i := !i - etal;
+    done;
+  end;
+  set_color blue
+
 let draw_player2D taille p =
   set_color blue;
   let px = p.pos.x * win_w / 800 / taille in
@@ -74,10 +91,18 @@ let draw_player2D taille p =
   let i = ref (140 / taille) in
   let etal = !i / 10 in
   let fov = fov / 2 in
-  while !i > 10 do
-    draw_arc px py !i !i (p.pa - fov) (p.pa + fov);
-    i := !i - etal;
-  done;
+  if minimap then
+    begin
+      while !i > 10 do
+        draw_arc px py !i !i (p.pa - fov) (p.pa + fov);
+        i := !i - etal;
+      done;
+    end
+  else
+    while !i > 10 do
+      draw_arc px py !i !i (p.pa - fov) (p.pa + fov);
+      i := !i - etal;
+    done;
   set_color blue
             
 let draw_player3D p =
@@ -94,6 +119,29 @@ let draw_player3D p =
                (win_w / 2, (yeux + 100) / 3);
                (win_w / 2 + 20, 1);
                (win_w / 2, (yeux + 100) / 3)|])
+
+let rotate x y a p t =
+  let c = dcos (-a) in
+  let s = dsin (-a) in
+  let px = foi ((win_w / 800) * 2) in
+  let tx = foi x -. px in
+  let ty = foi y -. 0. in
+  Format.eprintf "(px = %f, py = %f)\n@." px 0.;
+  (iof (tx *. c -. ty *. s +. px), iof (tx *. s +. ty *. c +. 0.))  
+            
+let draw_mini2D x p =
+  let taille = !scalemap in
+  let a = p.pa in
+  let xo, yo = (((iof x.xo) * win_w / 800) / taille), (((iof x.yo) * win_h / 800) / taille) in
+  let xd, yd = (((iof x.xd) * win_w / 800) / taille), (((iof x.yd) * win_h / 800) / taille) in
+  let px, py = p.pos.x * win_w / 800 / taille, p.pos.y * win_h / 800 / taille in
+  let xo, yo = xo - px, yo - py in
+  let xd, yd = xd - px, yd - py in
+  let xo, yo = (rotate xo yo (a-90) p taille) in
+  Format.eprintf "(xo = %d, yo = %d)\n@." xo yo;
+  let xd, yd = (rotate xd yd (a-90) p taille) in
+  Format.eprintf "(xd = %d, yd = %d)\n@." xd yd;
+  draw_segments [|xo+(win_w/taille)/2, yo, xd+(win_w/taille)/2, yd|]
             
 let draw_minimap map player =
   let taille = scale * 4 in
@@ -109,11 +157,11 @@ let draw_minimap map player =
      && player.pos.y >=0
      && player.pos.x <= win_w
      && player.pos.y <= win_h then
-    draw_player2D taille player;
+    draw_miniplayer2D taille player;
   set_color (rgb 102 51 0);
   set_line_width 2;
   scalemap := scale * 4;
-  let f s = draw2D (fsegment_of_seg s) in
+  let f s = draw_mini2D (fsegment_of_seg s) player in
   parse f map player.pos;
   scalemap := scale
 
@@ -124,7 +172,7 @@ let draw_sun sun player landsky_inter =
     begin
       sun.spos <- 0;
     end
-  else if player.pa mod 360 = 90 + (win_w / rs) + 20 (*&& player.pos.x = win_w/2*) then
+  else if player.pa mod 360 = 90 + (win_w / rs) (*&& player.pos.x = win_w/2*) then
     begin
       sun.spos <- win_w
     end;

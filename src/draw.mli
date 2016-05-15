@@ -1,4 +1,4 @@
-val draw2D : Fsegment.t -> unit
+val draw2D : Fsegment.t -> Player.t -> unit
 
 val draw3D : Fsegment.t -> unit
 

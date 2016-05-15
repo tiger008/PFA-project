@@ -70,7 +70,7 @@ let clip2D r p =
   | Some tr ->
      match projection_h tr p with
      | None -> ()
-     | Some ph -> draw2D (translation_rotation_inverse tr p)
+     | Some ph -> draw2D (translation_rotation_inverse tr p) p
 
 let algo3D s =
   let ls = win_w in

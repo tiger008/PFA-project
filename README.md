@@ -2,10 +2,14 @@
 ***
 ## Install
   Use `git clone` and `make` in main folder
+  
 ## Usage
   `./projet_pfa [map_path] [options]`
+  
 ## Keys
+
 #### FR mode
+
   - **`ESC`** : _quit_
   - **`z`** : _move forward_
   - **`q`** : _move left_ 
@@ -54,13 +58,14 @@
   
 ## Bugs
 
-  - Player can pass throw some corner
-  - 
+  - Player can pass through some corner
+  - When player and specifics walls are very closed with a certain angle, the wall disappear. But player cannot cross.
   
 ***
 
 ## Thanks
-  **Big thanks to M.Roux for debugging and explanations**
+
+  Big thanks to [Mr.Roux](https://www.lri.fr/~roux) for debugging and explanations
   
 ***
 <p align="center"><b>By <a href="https://github.com/Xritrios">Dimitrios Christaras-Papageorgiou</a> & <a href="https://github.com/tiger008">Thomas Perraut</b></a></p>

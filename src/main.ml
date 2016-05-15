@@ -52,8 +52,8 @@ let () =
         | 'c' -> change_mode (get_mode ())
         | 'p' -> increment_hov ()
         | 'o' -> decrement_hov ()
-        | 'i' -> increment_rs (); change_smove_r sun
-        | 'u' -> decrement_rs (); change_smove_r sun
+        | 'i' -> increment_rs (); change_smove_r sun; change_mmove_r moon
+        | 'u' -> decrement_rs (); change_smove_r sun; change_mmove_r moon
         | 't' -> change_time (get_time ())
         | 'v' -> change_perspective (get_perspective ())
         | '\027' -> raise Exit

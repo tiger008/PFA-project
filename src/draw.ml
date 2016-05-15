@@ -176,7 +176,6 @@ let draw_minimap map player =
 
 let draw_sun sun player landsky_inter =
   set_color yellow;
-  let rs = get_rs() in
   if player.pa = 90 then
     begin
       sun.spos <- 0;
@@ -190,7 +189,6 @@ let draw_sun sun player landsky_inter =
 
 let draw_moon moon player landsky_inter =
   set_color (rgb 192 192 192);
-  let rs = get_rs() in
   if player.pa = 90 then
     begin
       moon.mpos <- win_w;

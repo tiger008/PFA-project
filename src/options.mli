@@ -2,7 +2,11 @@ type tmode = TwoD | ThreeD
 type tlang = FR | US
 type ttime = Day | Night
 type tperspective = FPS | RPG
-                    
+type tmap = M1 | M2
+                            
+val change_map : tmap -> unit
+val get_map : unit -> tmap
+                            
 val change_mode : tmode -> unit
 val get_mode : unit -> tmode
 

@@ -2,14 +2,16 @@ type tmode = TwoD | ThreeD
 type tlang = FR | US
 type ttime = Day | Night
 type tperspective = FPS | RPG
+type tmap = M1 | M2
                     
 let usage = "usage: ./bsp file.lab"
 let file = ref ""
 
-let mode = ref TwoD
 let lang = ref FR
-let time = ref Day
+let map = ref M1
+let mode = ref TwoD
 let perspective = ref FPS
+let time = ref Day
                
 let win_w = ref 800
 let win_h = ref 800
@@ -29,6 +31,17 @@ let minimap = ref false
 let debug = ref false
 let debug_bsp = ref false
 
+let set_minimap = function
+  | "M1" -> map := M1
+  | "M2" -> map := M2
+  | _ -> raise (Arg.Bad "2D or 3D only")
+    
+let change_map = function
+  | M1 -> map := M2
+  | _ -> map := M1
+    
+let get_map () = !map
+                    
 let set_mode = function
   | "2D" -> mode := TwoD
   | "3D" -> mode := ThreeD
@@ -95,6 +108,7 @@ let specs =
     " set the dimensions of the graph";
     "-scale", Arg.Set_int scale, " scale of the 2D map";
     "-map", Arg.Set minimap, " set a minimap in the lower left corner";
+    "-mmap", Arg.String set_minimap, " <M1 | M2> M1 or M2 minimap display";
     "-step", Arg.Set_int step_dist, " set the distance between two steps";
     "-xmin", Arg.Set_int xmin, " set minimum distance of display";
     "-debug", Arg.Set debug, " debugging 2D rendering";

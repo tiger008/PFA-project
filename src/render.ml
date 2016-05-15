@@ -13,21 +13,6 @@ let win_h = foi win_h
 let ceiling_h = foi ceiling_h
 let floor_h = foi floor_h
 let scalemap = ref scale
-
-let translation_rotation s p =
-  let pp = new_point (-p.pos.x) (-p.pos.y) in
-  let ns = rotation (translation s pp) (-p.pa) in
-  let ns = {ns with angle = calc_angle ns} in
-  if (ns.xo < 1. && ns.xd < 1.) then None
-  else if ns.xo < 1. then
-    Some {ns with
-           xo = 1.;
-           yo = (ns.yo +. (1. -. ns.xo) *. (tan ns.angle))}
-  else if ns.xd < 1. then
-    Some {ns with
-           xd = 1.;
-           yd = (ns.yd +. (1. -. ns.xd) *. (tan ns.angle))}
-  else Some ns
             
 let clip2D r p =
   let r = fsegment_of_seg r in
@@ -108,10 +93,11 @@ let display bsp player sun moon =
   if get_mode () = TwoD then
     begin
       (* fond *)
-      set_color cyan;
+      set_color (rgb 255 210 132);
       fill_rect 0 0 win_w win_h;
       set_color black;
       draw_player2D scale player;
+      set_color (rgb 102 51 0);
       let f s = clip2D s player in
       rev_parse f bsp player.pos;
     end

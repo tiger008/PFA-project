@@ -80,11 +80,10 @@ let draw_miniplayer2D taille p =
   set_color blue
 
 let draw_player2D taille p =
-  set_color blue;
+  set_color black;
   let px = p.pos.x * win_w / 800 / taille in
   let py = p.pos.y * win_h / 800 / taille in
   fill_circle px py (10 / taille);
-  set_color yellow;
   let i = ref (140 / taille) in
   let etal = !i / 10 in
   let fov = fov / 2 in
@@ -154,11 +153,18 @@ let draw_minimap map player =
      && player.pos.y >=0
      && player.pos.x <= win_w
      && player.pos.y <= win_h then
-    draw_miniplayer2D taille player;
+    if get_map () = M2 then
+      draw_miniplayer2D taille player
+    else
+      draw_player2D taille player;
   set_color (rgb 102 51 0);
   set_line_width 2;
   scalemap := scale * 4;
-  let f s = draw_mini2D (fsegment_of_seg s) player in
+  let f s = if get_map () = M2 then
+              draw_mini2D (fsegment_of_seg s) player
+            else
+              draw2D (fsegment_of_seg s) player
+  in
   parse f map player.pos;
   scalemap := scale
 

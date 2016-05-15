@@ -50,6 +50,7 @@ let () =
                                    sun.spos <- sun.spos - sun.smove_r;
                                    moon.mpos <- moon.mpos + (get_rs()) + 60
         | 'l' -> change_lang (get_lang ())
+        | 'm' -> change_map (get_map ())
         | 'c' -> change_mode (get_mode ())
         | 'p' -> increment_hov ()
         | 'o' -> decrement_hov ()

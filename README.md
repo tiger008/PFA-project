@@ -1,5 +1,4 @@
 **<h1 align="center">Doom motor in OCaml</h1>**
-***
 <p align="center"><img height=500px src="./Doom.jpg"/></p>
 ***
 ## Install

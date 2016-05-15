@@ -56,11 +56,16 @@
 ## Collision Solution
 
   Collisions are managed first by calculating the player's new position and then by searching the existence of an intersection between the walls (segments) and the player's movement (speed vector).
+
+## Sun and Moon
+
+   The sun and the moon change position when we rotate the player
   
 ## Bugs
 
   - The player can pass through some corners.
   - When the player and some walls are very close, with a certain angle, to each other, the wall disappears. But the player cannot cross.
+  - The sun and the moon move correctly only when the rotation speed of the player is 10
 
 
 ## Thanks

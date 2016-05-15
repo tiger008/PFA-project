@@ -60,7 +60,7 @@
 ***
 
 ## Thanks
-  **Big thanks to M.Roux for debugging**
+  **Big thanks to M.Roux for debugging and explanations**
   
 ***
-<p align="center">By Dimitrios Christaras-Papageorgiou & Thomas Perraut</p>
+<p align="center"><b>By <a href="https://github.com/Xritrios">Dimitrios Christaras-Papageorgiou</a> & <a href="https://github.com/tiger008">Thomas Perraut</b></a></p>

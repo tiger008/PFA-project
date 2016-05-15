@@ -59,7 +59,7 @@
   
 ## Bugs
 
-  - Player can pass through some corner
+  - Player can pass through some corner.
   - When player and specifics walls are very closed with a certain angle, the wall disappear. But player cannot cross.
 
 

@@ -1,18 +1,18 @@
-open Options
-open Graphics
-open Player
-open Parse_lab
-open Segment
-open Point
 open Bsp
-open Trigo
-open Sys
-open Render
-open Sun
+open Graphics
 open Moon
+open Options
+open Parse_lab
+open Player
+open Point
+open Render
+open Segment
+open Sun
+open Sys
+open Trigo
 
 let rec seglist il acc =
-    match il with
+  match il with
   | [] -> acc
   | (xo, yo, xd, yd)::s -> seglist s ((new_segment xo yo xd yd)::acc)
 
@@ -26,10 +26,8 @@ let () =
   let map = build_bsp (seglist sl []) in
   let sun = new_sun 0 (50 + player.pos.y/win_h) in
   let moon = new_moon win_w (40 + player.pos.y/win_h) in
-  (*
-    (* DEBUG *)
-    Printf.printf "%s\n" (string_of_bsp map);
-  *)
+  (* DEBUG *)
+  (* Printf.printf "%s\n" (string_of_bsp map); *)
   open_graph (Printf.sprintf " %dx%d" win_w win_h);
   auto_synchronize false;
   try
@@ -41,10 +39,8 @@ let () =
       let _ = match s.key with
         | _ when s.key = fw -> move MFwd player map
         | _ when s.key = bw -> move MBwd player map
-        | _ when s.key = left-> move MLeft player map;
-        (*sun.spos <- sun.spos + sun.smove_s*)                 
+        | _ when s.key = left-> move MLeft player map;          
         | _ when s.key = right -> move MRight player map;
-        (*sun.spos <- sun.spos - sun.smove_s*)
         | _ when s.key = rleft -> rotate Left player;
                                   Format.eprintf "%d\n@." player.pa;
                                   sun.spos <- sun.spos + sun.smove_r;

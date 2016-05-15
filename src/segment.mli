@@ -1,19 +1,19 @@
 type t = {
-  id : string;
-  porig : Point.t; 
-  pdest : Point.t;
-  lx : int;
-  ly : int;
-  ci : float;
-  ce : float
-}
+    id : string;
+    porig : Point.t; 
+    pdest : Point.t;
+    lx : int;
+    ly : int;
+    ci : float;
+    ce : float
+  }
            
 type tpos = L | R | C
 
 val new_segment : int -> int -> int -> int -> t
 
 val get_segment : t -> t
-  
+                         
 val get_position : Point.t -> t -> tpos
 
 val split_segment : t -> t -> t option * t option

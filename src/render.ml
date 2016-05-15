@@ -1,21 +1,18 @@
-open Segment
-open Point
-open Player
-open Trigo
-open Graphics
 open Bsp
-open Fsegment
-open Options
 open Draw
+open Fsegment
+open Graphics
+open Options
+open Player
+open Point
+open Segment
+open Trigo
 
 let win_w = foi win_w
 let win_h = foi win_h
 let ceiling_h = foi ceiling_h
 let floor_h = foi floor_h
 let scalemap = ref scale
-
-let calc_angle s =
-  atan2 (s.yd -. s.yo) (s.xd -. s.xo)
 
 let translation_rotation s p =
   let pp = new_point (-p.pos.x) (-p.pos.y) in
@@ -32,37 +29,6 @@ let translation_rotation s p =
            yd = (ns.yd +. (1. -. ns.xd) *. (tan ns.angle))}
   else Some ns
             
-let translation_rotation_inverse s p =
-  let ns = translation (rotation s p.pa) p.pos in
-  {ns with angle = calc_angle ns}
-
-let projection_v s p =
-  let yeux = foi (get_hov ()) in
-  (* DEBUG *)
-  Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@."
-                 s.co s.zlo s.zuo s.cd s.zld s.zud;
-  let s = { s with
-            zuo = win_h /. 2. +. (ceiling_h -. yeux) *. p.d /. s.xo;
-            zlo = win_h /. 2. +. (floor_h -. yeux)  *. p.d /. s.xo;
-            zud = win_h /. 2. +. (ceiling_h -. yeux) *. p.d /. s.xd;
-            zld = win_h /. 2. +. (floor_h -. yeux)  *. p.d /. s.xd;
-            co = win_w /. 2. -. s.yo *. p.d /. s.xo;
-            cd = win_w /. 2. -. s.yd *. p.d /. s.xd
-          }
-  in
-  (* DEBUG *)
-  (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@." *)
-  (*                s.co s.zlo s.zuo s.cd s.zld s.zud; *)
-  s
-
-let projection_h s p =
-  let xo = p.d
-  and yo = win_w /. 2. -. s.yo *. p.d /. s.xo
-  and xd = p.d
-  and yd = win_w /. 2. -. s.yd *. p.d /. s.xd in
-  if yo < 0. && yd < 0. ||  yo > win_w && yd > win_w then None
-  else Some {s with xo; yo; xd; yd}
-
 let clip2D r p =
   let r = fsegment_of_seg r in
   match translation_rotation r p with
@@ -78,8 +44,7 @@ let algo3D s =
   let ymin = -.ymax in
   let du = (s.zud -. s.zuo) /. (s.cd -. s.co) in
   let dl = (s.zld -. s.zlo) /. (s.cd -. s.co) in
-  
-  (*  (\* DEBUG *\) *)
+  (* DEBUG *)
   (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f) (%.1f, %.1f)@." *)
   (* s.co s.zlo s.zuo s.cd s.zld s.zud du dl; *)
   if s.co < 0. then
@@ -114,14 +79,15 @@ let algo3D s =
   else if s.zlo = ymin && s.zuo = ymax && s.co > s.cd then s.co <- 800.;
   if s.zld = ymin && s.zud = ymax && s.cd < s.co then s.cd <- 0.
   else if s.zld = ymin && s.zud = ymax && s.cd > s.co then s.cd <- 800.
-  (* (\* DEBUG *\) *)
-  (* ; *)
-  (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\ *)
-  (*                 ---------------------@." *)
-  (*                s.co s.zlo s.zuo s.cd s.zld s.zud *)
-                 
+(* ; *)
+(* DEBUG *)
+(* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\ *)
+(*                 ---------------------@." *)
+(*                s.co s.zlo s.zuo s.cd s.zld s.zud *)
+                                                                     
 let clip3D p r =
   let r = fsegment_of_seg r in
+  (* DEBUG *)
   (* let xo, yo = iof r.xo, iof r.yo in *)
   (* let xd, yd = iof r.xd, iof r.yd in *)
   (* Format.eprintf "(%d, %d) (%d, %d)@." xo yo xd yd; *)

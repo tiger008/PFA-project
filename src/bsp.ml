@@ -1,5 +1,5 @@
-open Segment
 open Point
+open Segment
 
 type t = E | N of Segment.t * t * t
 
@@ -19,13 +19,13 @@ let rev_parse f bsp p =
     match bsp with
     | E -> ()
     | N(r,sl,sr) ->
-      let pos = get_position p r in
-      
-      match pos with
-      | L -> rrevparse sr; f r; rrevparse sl
-      | R | C -> rrevparse sl; f r; rrevparse sr
+       let pos = get_position p r in
+       
+       match pos with
+       | L -> rrevparse sr; f r; rrevparse sl
+       | R | C -> rrevparse sl; f r; rrevparse sr
   in rrevparse bsp
-  
+               
 let iter f bsp =
   let rec riter bsp =
     match bsp with

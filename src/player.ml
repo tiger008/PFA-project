@@ -1,20 +1,20 @@
 open Options
 open Physic
 open Point
-open Trigo
 open Segment
+open Trigo
 
 type t = {
-  mutable pos : Point.t;
-  mutable pa : int;
-  d : float;
-}
+    mutable pos : Point.t;
+    mutable pa : int;
+    d : float;
+  }
 
 let new_player pos pa ls fov = {
-  pos;
-  pa;
-  d = ((foi ls) /. 2.) /. dtan (fov / 2)
-}
+    pos;
+    pa;
+    d = ((foi ls) /. 2.) /. dtan (fov / 2)
+  }
 
 type dir = Left | Right
 
@@ -31,8 +31,8 @@ let move d p bsp =
   match d with
   | MFwd -> let np = new_point (iof (ceil ((foi (p.pos.x))
                                            -. step_dist *. (dsin (npa)))))
-              (iof (ceil ((foi (p.pos.y))
-                          +. step_dist *. (dcos (npa)))))
+                               (iof (ceil ((foi (p.pos.y))
+                                           +. step_dist *. (dcos (npa)))))
             in
             let v = new_segment p.pos.x p.pos.y np.x np.y in
             if not (detect_collision v bsp) then
@@ -40,8 +40,8 @@ let move d p bsp =
             else ()
   | MBwd -> let np = new_point (iof (floor ((foi (p.pos.x))
                                             +. step_dist *. (dsin (npa)))))
-              (iof (floor ((foi (p.pos.y))
-                           -. step_dist *. (dcos (npa)))))
+                               (iof (floor ((foi (p.pos.y))
+                                            -. step_dist *. (dcos (npa)))))
             in
             let v = new_segment p.pos.x p.pos.y np.x np.y in
             if not (detect_collision v bsp) then
@@ -49,8 +49,8 @@ let move d p bsp =
             else ()
   | MLeft -> let np = new_point (iof (ceil ((foi (p.pos.x))
                                             -. step_dist *. (dcos (npa)))))
-               (iof (ceil ((foi (p.pos.y))
-                           -. step_dist *. (dsin (npa)))))
+                                (iof (ceil ((foi (p.pos.y))
+                                            -. step_dist *. (dsin (npa)))))
              in
              let v = new_segment p.pos.x p.pos.y np.x np.y in
              if not (detect_collision v bsp) then
@@ -58,8 +58,8 @@ let move d p bsp =
              else ()
   | MRight -> let np = new_point (iof (floor ((foi (p.pos.x))
                                               +. step_dist *. (dcos (npa)))))
-                (iof (floor ((foi (p.pos.y))
-                             +. step_dist *. (dsin (npa)))))
+                                 (iof (floor ((foi (p.pos.y))
+                                              +. step_dist *. (dsin (npa)))))
               in
               let v = new_segment p.pos.x p.pos.y np.x np.y in
               if not (detect_collision v bsp) then

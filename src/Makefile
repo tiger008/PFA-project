@@ -19,8 +19,8 @@ EXEC = projet_pfa
 OBJS = point.cmo \
 	segment.cmo \
 	fsegment.cmo \
-	trigo.cmo \
 	options.cmo \
+	trigo.cmo \
 	bsp.cmo \
 	physic.cmo \
 	player.cmo \

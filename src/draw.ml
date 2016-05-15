@@ -1,13 +1,13 @@
-open Fsegment
-open Options
-open Player
 open Bsp
+open Fsegment
 open Graphics
+open Moon
+open Options
+open Physic
+open Player
 open Point
 open Sun
-open Moon
 open Trigo
-open Physic
        
 let scalemap = ref scale                 
                    
@@ -18,6 +18,7 @@ let draw2D x p =
                        ((iof x.xd) * win_w / 800) / taille,
                        ((iof x.yd) * win_h / 800) / taille
   in
+  (* affichage des numeros des segments *)
   (* moveto ((xd + xo) / 2) ((yd + yo) / 2); *)
   (* draw_string x.id; *)
   draw_segments [|xo, yo, xd, yd|]
@@ -40,10 +41,8 @@ let draw3D x =
                (cd, zud);
                (cd, zld)|]);
   set_color red;
-  (*
-     (* DEBUG *)
-      Format.eprintf " %s (ci = %f, ce = %f)\n@." x.id x.ci x.ce;
-   *)
+  (* DEBUG *)
+  (* Format.eprintf " %s (ci = %f, ce = %f)\n@." x.id x.ci x.ce; *)
   if x.ci > 0. && x.ce = 1. then
     draw_segments ([|(co, zlo, cd, zld);
                      (co, zuo, cd, zud);
@@ -60,12 +59,10 @@ let draw3D x =
                  (co, zuo);
                  (cd, zud);
                  (cd, zld)|])
-(*
-        (* DEBUG *)
-  Printf.printf "(x.co = %f, zlo = %f)\n(x.co = %f, zuo = %f)"
-  ^"\n(x.cd = %f, zud = %f)\n(x.cd = %f, zld = %f)\n"
-  x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld;
- *)
+(* DEBUG *)
+(* Printf.printf "(x.co = %f, zlo = %f)\n(x.co = %f, zuo = %f)" *)
+(* ^"\n(x.cd = %f, zud = %f)\n(x.cd = %f, zld = %f)\n" *)
+(* x.co x.zlo x.co x.zuo x.cd x.zud x.cd x.zld; *)
 
 let draw_miniplayer2D taille p =
   set_color black;
@@ -128,7 +125,7 @@ let rotate x y a p t =
   let ty = foi y -. 0. in
   Format.eprintf "(px = %f, py = %f)\n@." px 0.;
   (iof (tx *. c -. ty *. s +. px), iof (tx *. s +. ty *. c +. 0.))  
-            
+    
 let draw_mini2D x p =
   let taille = !scalemap in
   let a = p.pa in
@@ -142,7 +139,7 @@ let draw_mini2D x p =
   let xd, yd = (rotate xd yd (a-90) p taille) in
   Format.eprintf "(xd = %d, yd = %d)\n@." xd yd;
   draw_segments [|xo+(win_w/taille)/2, yo, xd+(win_w/taille)/2, yd|]
-            
+                
 let draw_minimap map player =
   let taille = scale * 4 in
   set_line_width 2;
@@ -168,11 +165,11 @@ let draw_minimap map player =
 let draw_sun sun player landsky_inter =
   set_color yellow;
   let rs = get_rs() in
-  if player.pa = 90 (*&& player.pos.x = win_w/2*) then
+  if player.pa = 90 then
     begin
       sun.spos <- 0;
     end
-  else if player.pa mod 360 = 90 + (win_w / rs) (*&& player.pos.x = win_w/2*) then
+  else if player.pa mod 360 = 90 + (win_w / rs) then
     begin
       sun.spos <- win_w
     end;

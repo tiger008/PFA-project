@@ -1,11 +1,9 @@
-<h1 align="center">Doom like in OCaml</h1>
-=====
+**<h1 align="center">Doom like in OCaml</h1>**
+***
 ## Install
   Use `git clone` and `make` in main folder
-  
 ## Usage
   `./projet_pfa [map_path] [options]`
-  
 ## Keys
 #### FR mode
   * **`ESC`** : _quit_
@@ -19,14 +17,13 @@
   * **`l`** : _change language between US and FR_
   * **`m`** : _toggle minimap_
   * **`p`** _and_ **`o`** : _change player view_ 
-  
 ### US mode
-  * **`w`** : _move forward_
-  * **`a`** : _move left_
-  * **`q`** : _rotate left_
+* **`w`** : _move forward_
+* **`a`** : _move left_
+* **`q`** : _rotate left_
 
-  >_other keys are unchange_
-  
+ >_<p>other keys are unchange</p>_
+ 
 ## Options
 
   ``

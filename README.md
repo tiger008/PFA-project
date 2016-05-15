@@ -17,6 +17,7 @@
   * **`l`** : _change language between US and FR_
   * **`m`** : _toggle minimap_
   * **`p`** _and_ **`o`** : _change player view_ 
+
 ### US mode
 * **`w`** : _move forward_
 * **`a`** : _move left_

@@ -29,7 +29,7 @@
   - **`a`** : _move left_
   - **`q`** : _rotate left_
 
->_other keys are unchanged_
+>_the other keys are unchanged_
   
 ## Options
 

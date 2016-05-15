@@ -28,25 +28,25 @@
   
 ## Options
 
-  - [x] `-mode` <2D | 3D> 2D or 3D display
+  - [x] `-mode` \<2D | 3D\> 2D or 3D display
   
-  - [x] `-lang` <FR | US> FR or US lang
+  - [x] `-lang` \<FR | US\> FR or US lang
   
-  - [x] `-fov` <NUMBER> field of vision (angle de vision)
+  - [x] `-fov` \<NUMBER\> field of vision (angle de vision)
   
-  - [x] `-hov` <NUMBER> height of vision (hauteur de vision)
+  - [x] `-hov` \<NUMBER\> height of vision (hauteur de vision)
   
-  - [x] `-rs` <NUMBER> rotation speed
+  - [x] `-rs` \<NUMBER\> rotation speed
   
-  - [x] `-scale` <NUMBER> scale of the 2D map
+  - [x] `-scale` \<NUMBER\> scale of the 2D map
 
   - [x] `-map` set a minimap in the lower left corner
   
-  - [x] `-step` <NUMBER> set the distance between two steps
+  - [x] `-step` \<NUMBER\> set the distance between two steps
   
-  - [x] `-time` <Day | Night> Day or Night display
+  - [x] `-time` \<Day | Night\> Day or Night display
   
-  - [ ] `-persp` <FPS | RPS> FPS or RPS perspective
+  - [ ] `-persp` \<FPS | RPS\> FPS or RPS perspective
   
 
 

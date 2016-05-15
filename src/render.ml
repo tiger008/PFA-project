@@ -61,9 +61,9 @@ let algo3D s =
   if s.zld < ymin then s.zld <- ymin;
   if s.zud > ymax then s.zud <- ymax;
   if s.zlo = ymin && s.zuo = ymax && s.co < s.cd then s.co <- 0.
-  else if s.zlo = ymin && s.zuo = ymax && s.co > s.cd then s.co <- 800.;
+  else if s.zlo = ymin && s.zuo = ymax && s.co > s.cd then s.co <- win_w;
   if s.zld = ymin && s.zud = ymax && s.cd < s.co then s.cd <- 0.
-  else if s.zld = ymin && s.zud = ymax && s.cd > s.co then s.cd <- 800.
+  else if s.zld = ymin && s.zud = ymax && s.cd > s.co then s.cd <- win_w
 (* ; *)
 (* DEBUG *)
 (* Format.eprintf "(%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)@,\ *)

@@ -42,13 +42,11 @@ let () =
         | _ when s.key = left-> move MLeft player map;          
         | _ when s.key = right -> move MRight player map;
         | _ when s.key = rleft -> rotate Left player;
-                                  Format.eprintf "%d\n@." player.pa;
                                   sun.spos <- sun.spos + sun.smove_r;
-                                  moon.mpos <- moon.mpos - (get_rs()) - 60
+                                  moon.mpos <- moon.mpos - moon.mmove_r
         | _ when s.key = rright -> rotate Right player;
-                                   Format.eprintf "%d\n@." player.pa;
                                    sun.spos <- sun.spos - sun.smove_r;
-                                   moon.mpos <- moon.mpos + (get_rs()) + 60
+                                   moon.mpos <- moon.mpos + moon.mmove_r
         | 'l' -> change_lang (get_lang ())
         | 'm' -> change_map (get_map ())
         | 'c' -> change_mode (get_mode ())
@@ -61,7 +59,6 @@ let () =
         | '\027' -> raise Exit
         | _ -> ()      
       in
-      Format.eprintf "%d\n@." player.pos.x;
       clear_graph ();
       display map player sun moon;
       synchronize ();

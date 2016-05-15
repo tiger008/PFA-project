@@ -11,8 +11,8 @@ let new_sun spos ssize = {
     spos;
     ssize;
     smove_s = truncate step_dist;
-    smove_r = win_w / (get_rs ())
+    smove_r = win_w / 10
   }
 
 let change_smove_r s =
-  s.smove_r <- win_w / (get_rs ())
+  s.smove_r <- win_w / 10

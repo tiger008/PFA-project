@@ -26,7 +26,8 @@ let draw2D x p =
 let draw3D x =
   let co, zlo, zuo = iof x.co, iof x.zlo, iof x.zuo in
   let cd, zld, zud = iof x.cd, iof x.zld, iof x.zud in
-  Format.eprintf "(%d, %d, %d) (%d, %d, %d)@." co zlo zuo cd zld zud;
+  (* DEBUG *)
+  (* Format.eprintf "(%d, %d, %d) (%d, %d, %d)@." co zlo zuo cd zld zud; *)
   let (co, cd, zlo, zuo, zud, zld) =
     ((co)/ scale,
      (cd) / scale,
@@ -122,7 +123,8 @@ let rotate x y a p t =
   let px = foi ((win_w / 800) * 2) in
   let tx = foi x -. px in
   let ty = foi y -. 0. in
-  Format.eprintf "(px = %f, py = %f)\n@." px 0.;
+  (* DEBUG *)
+  (* Format.eprintf "(px = %f, py = %f)\n@." px 0.; *)
   (iof (tx *. c -. ty *. s +. px), iof (tx *. s +. ty *. c +. 0.))  
     
 let draw_mini2D x p =
@@ -134,9 +136,11 @@ let draw_mini2D x p =
   let xo, yo = xo - px, yo - py in
   let xd, yd = xd - px, yd - py in
   let xo, yo = (rotate xo yo (a-90) p taille) in
-  Format.eprintf "(xo = %d, yo = %d)\n@." xo yo;
+  (* DEBUG *)
+  (* Format.eprintf "(xo = %d, yo = %d)\n@." xo yo; *)
   let xd, yd = (rotate xd yd (a-90) p taille) in
-  Format.eprintf "(xd = %d, yd = %d)\n@." xd yd;
+  (* DEBUG *)
+  (* Format.eprintf "(xd = %d, yd = %d)\n@." xd yd; *)
   draw_segments [|xo+(win_w/taille)/2, yo, xd+(win_w/taille)/2, yd|]
                 
 let draw_minimap map player =
@@ -149,14 +153,16 @@ let draw_minimap map player =
   set_color (rgb 255 210 132);
   fill_rect 0 0 (win_w / taille) (win_h / taille);
   set_line_width 1;
-  if player.pos.x >= 0
-     && player.pos.y >=0
-     && player.pos.x <= win_w
-     && player.pos.y <= win_h then
-    if get_map () = M2 then
-      draw_miniplayer2D taille player
-    else
-      draw_player2D taille player;
+  if get_map () = M1 then
+    if player.pos.x >= 0
+       && player.pos.y >=0
+       && player.pos.x <= win_w
+       && player.pos.y <= win_h
+    then
+      draw_player2D taille player
+    else ()
+  else
+    draw_miniplayer2D taille player;
   set_color (rgb 102 51 0);
   set_line_width 2;
   scalemap := scale * 4;
@@ -175,7 +181,7 @@ let draw_sun sun player landsky_inter =
     begin
       sun.spos <- 0;
     end
-  else if player.pa mod 360 = 90 + (win_w / rs) then
+  else if player.pa = 90 + 10 * 10 then
     begin
       sun.spos <- win_w
     end;
@@ -184,11 +190,12 @@ let draw_sun sun player landsky_inter =
 
 let draw_moon moon player landsky_inter =
   set_color (rgb 192 192 192);
+  let rs = get_rs() in
   if player.pa = 90 then
     begin
       moon.mpos <- win_w;
-    end;
-  if player.pa = 90+60 then
+    end
+  else if player.pa = 90 + 10 * 10 then
     begin
       moon.mpos <- 0
     end;

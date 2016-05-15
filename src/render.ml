@@ -104,7 +104,6 @@ let display bsp player sun moon =
   else
     begin
       let landsky_inter = win_h / 2 + get_hov () in
-      Format.eprintf "%d landsky_inter\n@." landsky_inter;
       if get_time () = Day then
         begin
           set_color (rgb 51 204 255);
@@ -125,7 +124,8 @@ let display bsp player sun moon =
         fill_rect 0 0 win_w landsky_inter;
       set_color black;
       rev_parse (clip3D player) bsp player.pos;
-      Format.eprintf "-----------------@.";
+      (* DEBUG *)
+      (* Format.eprintf "-----------------@."; *)
       if minimap then draw_minimap bsp player;
       if get_hov () = ceiling_h / 2 && get_perspective () = RPG then
         draw_player3D player

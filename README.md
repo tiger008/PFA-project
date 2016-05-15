@@ -46,13 +46,21 @@
   
   - [x] `-time` \<Day | Night\> Day or Night display
   
-  - [ ] `-persp` \<FPS | RPS\> FPS or RPS perspective
+  - [x] `-persp` \<FPS | RPS\> FPS or RPS perspective
+
+## Collision Solution
+
+  Collisions are managed by calculating the new position of the player and search for intersection between walls (segments) and player moving (speed vector).
   
-
-
-
 ## Bugs
 
+  - Player can pass throw some corner
+  - 
+  
+***
 
+## Thanks
+  **Big thanks to M.Roux for debugging**
+  
 ***
 <p align="center">By Dimitrios Christaras-Papageorgiou & Thomas Perraut</p>

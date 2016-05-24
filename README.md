@@ -73,4 +73,4 @@
   Big thanks to [Mr.Roux](https://www.lri.fr/~roux) for debugging and explanations
   
 ***
-<p align="center"><b>By <a href="https://github.com/Xritrios">Dimitrios Christaras-Papageorgiou</a> & <a href="https://github.com/tiger008">Thomas Perraut</b></a></p>
+<p align="center"><b>By <a href="https://github.com/Xritrios">Dimitrios Christaras-Papageorgiou</a> & <a href="https://github.com/tperraut">Thomas Perraut</b></a></p>
